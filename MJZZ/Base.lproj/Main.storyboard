@@ -2,7 +2,9 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--计时-->
@@ -27,8 +29,8 @@
                                         <barButtonItem key="leftBarButtonItem" image="Rank" id="Dgb-PM-dPa">
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </barButtonItem>
-                                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="lAB-DA-7n5">
-                                            <rect key="frame" x="191" y="7" width="218" height="30"/>
+                                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" id="lAB-DA-7n5">
+                                            <rect key="frame" x="59" y="8" width="482" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <animations/>
                                             <segments>
@@ -74,14 +76,25 @@
                                                     <action selector="increaseTimerButtonClicked:" destination="9pv-A4-QxB" eventType="touchUpInside" id="eLC-Q0-cGj"/>
                                                 </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="34E-gw-acM" customClass="AnimatableTimerView" customModule="MJZZ" customModuleProvider="target">
+                                                <rect key="frame" x="75" y="19" width="450" height="450"/>
+                                                <animations/>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="34E-gw-acM" secondAttribute="height" multiplier="1:1" id="ryi-c4-pJo"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <animations/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="yYf-3K-vR5" firstAttribute="centerX" secondItem="r0H-9q-3zy" secondAttribute="centerX" id="M9a-rB-1ok"/>
+                                            <constraint firstItem="34E-gw-acM" firstAttribute="centerX" secondItem="r0H-9q-3zy" secondAttribute="centerX" id="USh-dT-Wg2"/>
                                             <constraint firstItem="9F4-J3-2gc" firstAttribute="centerX" secondItem="r0H-9q-3zy" secondAttribute="centerX" id="ZwX-ed-F7t"/>
                                             <constraint firstAttribute="bottom" secondItem="9F4-J3-2gc" secondAttribute="bottom" constant="30" id="aCb-7k-8OJ"/>
                                             <constraint firstItem="yYf-3K-vR5" firstAttribute="centerY" secondItem="r0H-9q-3zy" secondAttribute="centerY" id="chb-Js-Z1j"/>
+                                            <constraint firstItem="34E-gw-acM" firstAttribute="width" secondItem="r0H-9q-3zy" secondAttribute="width" multiplier="3:4" id="k9T-ZT-1eL"/>
+                                            <constraint firstItem="34E-gw-acM" firstAttribute="centerY" secondItem="r0H-9q-3zy" secondAttribute="centerY" id="qrI-b9-KQh"/>
                                             <constraint firstItem="yYf-3K-vR5" firstAttribute="width" secondItem="r0H-9q-3zy" secondAttribute="width" id="sEF-ww-U5Y"/>
                                         </constraints>
                                     </view>
@@ -110,31 +123,42 @@
                                                     <action selector="decreaseTimerButtonClicked:" destination="9pv-A4-QxB" eventType="touchUpInside" id="7eo-Os-QO3"/>
                                                 </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3S3-BC-F38" customClass="AnimatableTimerView" customModule="MJZZ" customModuleProvider="target">
+                                                <rect key="frame" x="75" y="19" width="450" height="450"/>
+                                                <animations/>
+                                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="3S3-BC-F38" secondAttribute="height" multiplier="1:1" id="ugT-oD-LWo"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <animations/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="P4d-QH-KUg" firstAttribute="centerY" secondItem="Acz-dQ-dKr" secondAttribute="centerY" id="0I6-Pm-mA3"/>
                                             <constraint firstAttribute="bottom" secondItem="VlA-oT-lxp" secondAttribute="bottom" constant="30" id="3X3-yd-B0O"/>
+                                            <constraint firstItem="3S3-BC-F38" firstAttribute="width" secondItem="Acz-dQ-dKr" secondAttribute="width" multiplier="3:4" id="7qS-v6-92O"/>
                                             <constraint firstItem="VlA-oT-lxp" firstAttribute="centerX" secondItem="Acz-dQ-dKr" secondAttribute="centerX" id="AxQ-gd-7lb"/>
                                             <constraint firstItem="P4d-QH-KUg" firstAttribute="centerX" secondItem="Acz-dQ-dKr" secondAttribute="centerX" id="Bb4-kN-k7z"/>
+                                            <constraint firstItem="3S3-BC-F38" firstAttribute="centerY" secondItem="Acz-dQ-dKr" secondAttribute="centerY" id="Ff5-cl-hzh"/>
+                                            <constraint firstItem="3S3-BC-F38" firstAttribute="centerX" secondItem="Acz-dQ-dKr" secondAttribute="centerX" id="Ttz-Ga-9Qx"/>
                                             <constraint firstItem="P4d-QH-KUg" firstAttribute="width" secondItem="Acz-dQ-dKr" secondAttribute="width" id="mCp-Lh-J52"/>
                                         </constraints>
                                     </view>
                                 </subviews>
                                 <animations/>
                                 <constraints>
-                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="bottom" secondItem="r0H-9q-3zy" secondAttribute="bottom" id="1Nf-j6-OCX"/>
-                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="width" secondItem="r0H-9q-3zy" secondAttribute="width" id="2Ov-j4-NJq"/>
-                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="top" secondItem="r0H-9q-3zy" secondAttribute="top" id="DOL-pD-kxH"/>
-                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="bottom" secondItem="39f-HJ-TPh" secondAttribute="bottom" id="UVD-Hy-2Tu"/>
-                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="top" secondItem="39f-HJ-TPh" secondAttribute="top" id="bxw-tY-gdI"/>
-                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="height" secondItem="r0H-9q-3zy" secondAttribute="height" id="cPd-p3-5LR"/>
-                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="height" secondItem="39f-HJ-TPh" secondAttribute="height" id="kHI-rO-Kf4"/>
-                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="leading" secondItem="39f-HJ-TPh" secondAttribute="leading" id="qyp-zZ-LYx"/>
-                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="trailing" secondItem="39f-HJ-TPh" secondAttribute="trailing" id="sZn-w6-cuU"/>
-                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="leading" secondItem="r0H-9q-3zy" secondAttribute="trailing" id="whh-zP-q9k"/>
-                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="width" secondItem="39f-HJ-TPh" secondAttribute="width" id="y5B-Dm-mg6"/>
+                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="height" secondItem="r0H-9q-3zy" secondAttribute="height" id="3Fq-fp-bmP"/>
+                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="top" secondItem="39f-HJ-TPh" secondAttribute="top" id="57C-o0-v1b"/>
+                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="top" secondItem="39f-HJ-TPh" secondAttribute="top" id="5G5-vA-0N2"/>
+                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="width" secondItem="r0H-9q-3zy" secondAttribute="width" id="8OA-lA-r6R"/>
+                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="height" secondItem="39f-HJ-TPh" secondAttribute="height" id="FAj-vq-kzi"/>
+                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="bottom" secondItem="39f-HJ-TPh" secondAttribute="bottom" id="HKo-oh-hCZ"/>
+                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="leading" secondItem="39f-HJ-TPh" secondAttribute="leading" id="Iq4-s6-zdl"/>
+                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="bottom" secondItem="39f-HJ-TPh" secondAttribute="bottom" id="Ruk-mN-UZC"/>
+                                    <constraint firstItem="Acz-dQ-dKr" firstAttribute="leading" secondItem="r0H-9q-3zy" secondAttribute="trailing" id="Z2b-oH-e2N"/>
+                                    <constraint firstItem="r0H-9q-3zy" firstAttribute="width" secondItem="39f-HJ-TPh" secondAttribute="width" id="bGY-3C-kJk"/>
+                                    <constraint firstAttribute="trailing" secondItem="Acz-dQ-dKr" secondAttribute="trailing" id="wQI-ji-in8"/>
                                 </constraints>
                                 <inset key="scrollIndicatorInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                             </scrollView>
@@ -154,8 +178,10 @@
                     <tabBarItem key="tabBarItem" title="计时" image="Timer" selectedImage="Timer_selected" id="lfV-Mb-4OB"/>
                     <connections>
                         <outlet property="containerScrollView" destination="39f-HJ-TPh" id="dUl-fa-NVk"/>
+                        <outlet property="decreaseAnimateView" destination="3S3-BC-F38" id="Mmb-vD-Lpe"/>
                         <outlet property="decreaseTimeLabel" destination="P4d-QH-KUg" id="K0z-Kf-iZx"/>
                         <outlet property="decreaseView" destination="Acz-dQ-dKr" id="Er4-pa-ZAA"/>
+                        <outlet property="increaseAnimateView" destination="34E-gw-acM" id="Ovw-G8-hkE"/>
                         <outlet property="increaseTimeLabel" destination="yYf-3K-vR5" id="KWO-uq-25G"/>
                         <outlet property="increaseView" destination="r0H-9q-3zy" id="pWA-3K-U4u"/>
                         <outlet property="segment" destination="lAB-DA-7n5" id="5pL-XB-qkK"/>
