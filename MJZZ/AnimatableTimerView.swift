@@ -7,43 +7,67 @@
 //
 
 import UIKit
+enum TimeAnimateType : Int32{
+    case IncreaseType = 0
+    case DecreaseType = 1
+}
 
 class AnimatableTimerView: UIView {
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     let PI : CGFloat = 3.14159
+    var animateType : TimeAnimateType = TimeAnimateType.IncreaseType
     var animateProgress : CGFloat = 0
-    var animateLineBackgroudColor : UIColor = UIColor.redColor()
-    var defaultLineBackgroudColor : UIColor = UIColor.lightGrayColor()
+    var animatingLineColor : UIColor = UIColor.redColor()
+    var animatedLineColor : UIColor = UIColor.lightGrayColor()
     
     override func drawRect(rect: CGRect) {
         // Drawing code
         let center : CGPoint = CGPoint(x: rect.width/2, y: rect.height/2)
-        let context : CGContextRef = UIGraphicsGetCurrentContext()!
-        //设置线条样式
-        CGContextSetLineCap(context, CGLineCap.Round)
-        //设置线条粗细宽度
-        CGContextSetLineWidth(context, 3.0);
-        //设置颜色
+        let radius : CGFloat = center.x * 3 / 4
+        let startAngle : CGFloat = PI * 3 / 2
+        var endAngle : CGFloat
+        var animateEndAngle : CGFloat
+        if animateProgress >= 1.0 {
+            animateProgress = 0
+            let aColor : UIColor = animatingLineColor
+            animatingLineColor = animatedLineColor
+            animatedLineColor = aColor
+        }
+        
+        switch animateType {
+        case TimeAnimateType.IncreaseType :
+            endAngle = 7 / 2 * PI
+            animateEndAngle = (3 + 4 * animateProgress) / 2 * PI
+        case TimeAnimateType.DecreaseType :
+            endAngle  = (-1)/2 * PI
+            animateEndAngle = (3 - 4 * animateProgress) / 2 * PI
+        }
+        
         var cRed : CGFloat = CGFloat()
         var cGreen : CGFloat = CGFloat()
         var cBlue : CGFloat = CGFloat()
         var cAlpha : CGFloat = CGFloat()
         
+        let context : CGContextRef = UIGraphicsGetCurrentContext()!
+        CGContextSetLineCap(context, CGLineCap.Round)
+        CGContextSetLineWidth(context, 3.0);
         //绘制初始圆
-        defaultLineBackgroudColor.getRed(&cRed, green: &cGreen, blue: &cBlue, alpha: &cAlpha)
-        CGContextSetRGBStrokeColor(context, cRed, cGreen, cBlue, cAlpha)
         CGContextBeginPath(context)
-        CGContextAddArc(context, center.x, center.y, center.x - 5, PI * 3 / 2, PI * 7 / 2 , 0)
-        CGContextStrokePath(context);
+        CGContextAddArc(context, center.x, center.y, radius, startAngle, endAngle, animateType.rawValue)
         
-        //绘制动画圆
-        animateLineBackgroudColor.getRed(&cRed, green: &cGreen, blue: &cBlue, alpha: &cAlpha)
+        animatedLineColor.getRed(&cRed, green: &cGreen, blue: &cBlue, alpha: &cAlpha)
         CGContextSetRGBStrokeColor(context, cRed, cGreen, cBlue, cAlpha)
-
+        
+        CGContextDrawPath(context, CGPathDrawingMode.Stroke)
+       
+        //绘制动画圆
         CGContextBeginPath(context)
-        CGContextAddArc(context, center.x, center.y, center.x-5, PI * 3 / 2,  PI * 3 / 2 + PI * 2 * animateProgress, 0)
-        CGContextStrokePath(context);
-
+        CGContextAddArc(context, center.x, center.y, radius, startAngle, animateEndAngle, animateType.rawValue)
+        
+        animatingLineColor.getRed(&cRed, green: &cGreen, blue: &cBlue, alpha: &cAlpha)
+        CGContextSetRGBStrokeColor(context, cRed, cGreen, cBlue, cAlpha)
+        
+        CGContextDrawPath(context, CGPathDrawingMode.Stroke)
     }
 }

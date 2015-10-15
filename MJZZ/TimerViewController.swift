@@ -15,14 +15,11 @@ class TimerViewController: UIViewController,UIScrollViewDelegate {
     var increaseTimer : NSTimer!
     var decreaseTimer : NSTimer!
     
-    @IBOutlet weak var increaseView: UIView!
-    @IBOutlet weak var decreaseView: UIView!
+    @IBOutlet weak var increaseView: AnimatableTimerView!
+    @IBOutlet weak var decreaseView: AnimatableTimerView!
     
     @IBOutlet weak var increaseTimeLabel: UILabel!
     @IBOutlet weak var decreaseTimeLabel: UILabel!
-    
-    @IBOutlet weak var increaseAnimateView: AnimatableTimerView!
-    @IBOutlet weak var decreaseAnimateView: AnimatableTimerView!
     
     @IBOutlet weak var segment: UISegmentedControl!
     @IBOutlet weak var containerScrollView: UIScrollView!
@@ -33,6 +30,8 @@ class TimerViewController: UIViewController,UIScrollViewDelegate {
         increaseTimeLabel.text = self.timeToString(increaseTime)
         decreaseTimeLabel.text = self.timeToString(decreaseTime)
         containerScrollView.delegate = self
+        increaseView.animateType = TimeAnimateType.IncreaseType
+        decreaseView.animateType = TimeAnimateType.DecreaseType
     }
     @IBAction func segmentChanged(sender: UISegmentedControl) {
         let offSetX : CGFloat = CGFloat(sender.selectedSegmentIndex) * containerScrollView.frame.width
@@ -53,14 +52,14 @@ class TimerViewController: UIViewController,UIScrollViewDelegate {
     func increaseTimerStart() {
         increaseTime += 10
         increaseTimeLabel.text = self.timeToString(increaseTime)
-        increaseAnimateView.animateProgress += 1 / 600
-        increaseAnimateView.setNeedsDisplay()
+        increaseView.animateProgress += 1 / 600
+        increaseView.setNeedsDisplay()
     }
     func decreaseTimerStart() {
         decreaseTime -= 10
         decreaseTimeLabel.text = self.timeToString(decreaseTime)
-        decreaseAnimateView.animateProgress += 1 / 600
-        decreaseAnimateView.setNeedsDisplay()
+        decreaseView.animateProgress += 1 / 600
+        decreaseView.setNeedsDisplay()
     }
     @IBAction func increaseTimerButtonClicked(sender: UIButton) {
         if(increaseTimer == nil){
