@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--计时-->
@@ -27,8 +28,8 @@
                                         <barButtonItem key="leftBarButtonItem" image="Rank" id="Dgb-PM-dPa">
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </barButtonItem>
-                                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bordered" selectedSegmentIndex="0" id="lAB-DA-7n5">
-                                            <rect key="frame" x="59" y="8" width="482" height="29"/>
+                                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="lAB-DA-7n5">
+                                            <rect key="frame" x="59" y="7" width="482" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <animations/>
                                             <segments>
@@ -49,7 +50,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="39f-HJ-TPh">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r0H-9q-3zy" userLabel="IncreaseView" customClass="AnimatableTimerView" customModule="MJZZ" customModuleProvider="target">
+                                    <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r0H-9q-3zy" userLabel="IncreaseView" customClass="AnimatableTimerView" customModule="MJZZ" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yYf-3K-vR5" userLabel="IncreaseLabel">
@@ -59,7 +60,7 @@
                                                     <constraint firstAttribute="height" constant="40" id="J8x-rA-6AP"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="30"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9F4-J3-2gc" userLabel="IncreaseButton">
@@ -85,17 +86,18 @@
                                             <constraint firstItem="yYf-3K-vR5" firstAttribute="width" secondItem="r0H-9q-3zy" secondAttribute="width" id="sEF-ww-U5Y"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Acz-dQ-dKr" userLabel="DecreaseView" customClass="AnimatableTimerView" customModule="MJZZ" customModuleProvider="target">
+                                    <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Acz-dQ-dKr" userLabel="DecreaseView" customClass="AnimatableTimerView" customModule="MJZZ" customModuleProvider="target">
                                         <rect key="frame" x="600" y="0.0" width="600" height="487"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P4d-QH-KUg" userLabel="DecreaseLabel">
+                                            <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P4d-QH-KUg" userLabel="DecreaseLabel">
                                                 <rect key="frame" x="0.0" y="224" width="600" height="40"/>
                                                 <animations/>
+                                                <gestureRecognizers/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="eqC-nM-Hr6"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="30"/>
-                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VlA-oT-lxp" userLabel="DecreaseButton">
@@ -110,14 +112,28 @@
                                                     <action selector="decreaseTimerButtonClicked:" destination="9pv-A4-QxB" eventType="touchUpInside" id="7eo-Os-QO3"/>
                                                 </connections>
                                             </button>
+                                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R6T-U0-2Lq">
+                                                <rect key="frame" x="0.0" y="292" width="600" height="195"/>
+                                                <animations/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <connections>
+                                                    <outlet property="dataSource" destination="9pv-A4-QxB" id="pwL-QG-M1f"/>
+                                                    <outlet property="delegate" destination="9pv-A4-QxB" id="kkV-Gh-bcK"/>
+                                                </connections>
+                                            </pickerView>
                                         </subviews>
                                         <animations/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <gestureRecognizers/>
                                         <constraints>
+                                            <constraint firstItem="R6T-U0-2Lq" firstAttribute="centerX" secondItem="Acz-dQ-dKr" secondAttribute="centerX" id="0B0-HV-q8h"/>
                                             <constraint firstItem="P4d-QH-KUg" firstAttribute="centerY" secondItem="Acz-dQ-dKr" secondAttribute="centerY" id="0I6-Pm-mA3"/>
                                             <constraint firstAttribute="bottom" secondItem="VlA-oT-lxp" secondAttribute="bottom" constant="30" id="3X3-yd-B0O"/>
                                             <constraint firstItem="VlA-oT-lxp" firstAttribute="centerX" secondItem="Acz-dQ-dKr" secondAttribute="centerX" id="AxQ-gd-7lb"/>
                                             <constraint firstItem="P4d-QH-KUg" firstAttribute="centerX" secondItem="Acz-dQ-dKr" secondAttribute="centerX" id="Bb4-kN-k7z"/>
+                                            <constraint firstItem="R6T-U0-2Lq" firstAttribute="height" secondItem="Acz-dQ-dKr" secondAttribute="height" multiplier="2:5" id="NKE-Gx-ggS"/>
+                                            <constraint firstAttribute="bottom" secondItem="R6T-U0-2Lq" secondAttribute="bottom" id="Tg9-fH-nq1"/>
+                                            <constraint firstItem="R6T-U0-2Lq" firstAttribute="width" secondItem="Acz-dQ-dKr" secondAttribute="width" id="ZMm-XD-Vo4"/>
                                             <constraint firstItem="P4d-QH-KUg" firstAttribute="width" secondItem="Acz-dQ-dKr" secondAttribute="width" id="mCp-Lh-J52"/>
                                         </constraints>
                                     </view>
@@ -155,6 +171,7 @@
                     <connections>
                         <outlet property="containerScrollView" destination="39f-HJ-TPh" id="dUl-fa-NVk"/>
                         <outlet property="decreaseTimeLabel" destination="P4d-QH-KUg" id="K0z-Kf-iZx"/>
+                        <outlet property="decreaseTimePicker" destination="R6T-U0-2Lq" id="mpU-Yb-TVW"/>
                         <outlet property="decreaseView" destination="Acz-dQ-dKr" id="Er4-pa-ZAA"/>
                         <outlet property="increaseTimeLabel" destination="yYf-3K-vR5" id="KWO-uq-25G"/>
                         <outlet property="increaseView" destination="r0H-9q-3zy" id="pWA-3K-U4u"/>

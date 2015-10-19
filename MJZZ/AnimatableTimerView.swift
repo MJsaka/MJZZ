@@ -15,7 +15,7 @@ enum TimeAnimateType : Int32{
 class AnimatableTimerView: UIView {
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
-    let PI : CGFloat = 3.14159
+    let PI : CGFloat = 3.141592654
     var animateType : TimeAnimateType = TimeAnimateType.IncreaseType
     var animateProgress : CGFloat = 0
     var animatingLineColor : UIColor = UIColor.redColor()
@@ -28,7 +28,7 @@ class AnimatableTimerView: UIView {
         let startAngle : CGFloat = PI * 3 / 2
         var endAngle : CGFloat
         var animateEndAngle : CGFloat
-        if animateProgress >= 1.0 {
+        if animateProgress > 1.0 {
             animateProgress = 0
             let aColor : UIColor = animatingLineColor
             animatingLineColor = animatedLineColor
@@ -51,7 +51,7 @@ class AnimatableTimerView: UIView {
         
         let context : CGContextRef = UIGraphicsGetCurrentContext()!
         CGContextSetLineCap(context, CGLineCap.Round)
-        CGContextSetLineWidth(context, 3.0);
+        CGContextSetLineWidth(context, 5.0);
         //绘制初始圆
         CGContextBeginPath(context)
         CGContextAddArc(context, center.x, center.y, radius, startAngle, endAngle, animateType.rawValue)
