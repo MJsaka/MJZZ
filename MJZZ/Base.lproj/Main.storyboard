@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -73,9 +73,9 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="最高记录" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hiv-LT-lgZ">
-                                                <rect key="frame" x="0.0" y="158" width="600" height="21"/>
+                                                <rect key="frame" x="0.0" y="157" width="600" height="22"/>
                                                 <animations/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -305,8 +305,112 @@
                             </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cmb-0I-e8K">
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Ev3-aI-COF">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="31"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="vAr-OX-4Su"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="年"/>
+                                            <segment title="月"/>
+                                            <segment title="日"/>
+                                        </segments>
+                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="graphScopeChanged:" destination="L2B-Iw-6E8" eventType="valueChanged" id="5ZD-CH-onL"/>
+                                        </connections>
+                                    </segmentedControl>
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spn-Zp-QSV">
+                                        <rect key="frame" x="0.0" y="30" width="600" height="292"/>
+                                        <animations/>
+                                    </scrollView>
+                                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z6q-wu-xvu" customClass="StatisticAxisYView" customModule="MJZZ" customModuleProvider="target">
+                                        <rect key="frame" x="500" y="30" width="100" height="292"/>
+                                        <animations/>
+                                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="z59-44-qTF"/>
+                                        </constraints>
+                                    </view>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="F7y-Mp-50r">
+                                        <rect key="frame" x="0.0" y="322" width="600" height="165"/>
+                                        <animations/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="StatisticTableViewCell" id="FLb-mu-Vcz">
+                                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FLb-mu-Vcz" id="6rm-Tw-dNw">
+                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="startDateLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shx-BP-zNz">
+                                                            <rect key="frame" x="10" y="11" width="600" height="21"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="18"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="durationLabel" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tHp-f4-EAx">
+                                                            <rect key="frame" x="-36" y="11" width="600" height="21"/>
+                                                            <animations/>
+                                                            <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="18"/>
+                                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Timer_Statistic" translatesAutoresizingMaskIntoConstraints="NO" id="abV-er-gFd">
+                                                            <rect key="frame" x="574" y="14" width="16" height="16"/>
+                                                            <animations/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="16" id="BJz-FQ-wdh"/>
+                                                                <constraint firstAttribute="width" constant="16" id="kBz-oX-7uo"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstItem="Shx-BP-zNz" firstAttribute="width" secondItem="6rm-Tw-dNw" secondAttribute="width" id="Ekq-cX-AI4"/>
+                                                        <constraint firstItem="Shx-BP-zNz" firstAttribute="centerY" secondItem="6rm-Tw-dNw" secondAttribute="centerY" id="RLW-da-qwG"/>
+                                                        <constraint firstItem="Shx-BP-zNz" firstAttribute="leading" secondItem="6rm-Tw-dNw" secondAttribute="leading" constant="10" id="V44-lW-zdn"/>
+                                                        <constraint firstItem="tHp-f4-EAx" firstAttribute="trailing" secondItem="6rm-Tw-dNw" secondAttribute="trailing" constant="-36" id="aIy-9O-zcM"/>
+                                                        <constraint firstItem="tHp-f4-EAx" firstAttribute="centerY" secondItem="6rm-Tw-dNw" secondAttribute="centerY" id="hlt-8G-bnk"/>
+                                                        <constraint firstItem="tHp-f4-EAx" firstAttribute="width" secondItem="6rm-Tw-dNw" secondAttribute="width" id="ub6-L2-neB"/>
+                                                        <constraint firstItem="abV-er-gFd" firstAttribute="centerY" secondItem="6rm-Tw-dNw" secondAttribute="centerY" id="yif-79-LRH"/>
+                                                    </constraints>
+                                                </tableViewCellContentView>
+                                                <animations/>
+                                                <constraints>
+                                                    <constraint firstItem="abV-er-gFd" firstAttribute="trailing" secondItem="FLb-mu-Vcz" secondAttribute="trailing" constant="-10" id="qfV-z4-KRM"/>
+                                                </constraints>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="L2B-Iw-6E8" id="C6T-dy-49J"/>
+                                            <outlet property="delegate" destination="L2B-Iw-6E8" id="xvV-jE-QbL"/>
+                                        </connections>
+                                    </tableView>
+                                </subviews>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="F7y-Mp-50r" secondAttribute="bottom" id="BAk-I6-5Vn"/>
+                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="height" secondItem="spn-Zp-QSV" secondAttribute="height" id="Hqt-RU-Zmy"/>
+                                    <constraint firstAttribute="trailing" secondItem="F7y-Mp-50r" secondAttribute="trailing" id="Mja-fj-ngQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="spn-Zp-QSV" secondAttribute="trailing" id="Uq2-Sz-wC2"/>
+                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="top" secondItem="Ev3-aI-COF" secondAttribute="bottom" id="cAV-fC-zrK"/>
+                                    <constraint firstItem="Ev3-aI-COF" firstAttribute="leading" secondItem="cmb-0I-e8K" secondAttribute="leading" id="h6t-cW-3aE"/>
+                                    <constraint firstItem="F7y-Mp-50r" firstAttribute="leading" secondItem="cmb-0I-e8K" secondAttribute="leading" id="idy-Rz-WT6"/>
+                                    <constraint firstItem="spn-Zp-QSV" firstAttribute="leading" secondItem="cmb-0I-e8K" secondAttribute="leading" id="ifq-fY-ZGG"/>
+                                    <constraint firstItem="F7y-Mp-50r" firstAttribute="top" secondItem="z6q-wu-xvu" secondAttribute="bottom" id="nU6-Ux-WEC"/>
+                                    <constraint firstItem="spn-Zp-QSV" firstAttribute="height" secondItem="cmb-0I-e8K" secondAttribute="height" multiplier="3:5" id="pew-OB-dFC"/>
+                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="trailing" secondItem="cmb-0I-e8K" secondAttribute="trailing" id="q7q-kj-G2e"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ev3-aI-COF" secondAttribute="trailing" id="qiE-oy-D7i"/>
+                                    <constraint firstItem="spn-Zp-QSV" firstAttribute="top" secondItem="Ev3-aI-COF" secondAttribute="bottom" id="swp-y3-b4Z"/>
+                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="centerY" secondItem="spn-Zp-QSV" secondAttribute="centerY" id="v3e-wl-tNw"/>
+                                    <constraint firstItem="Ev3-aI-COF" firstAttribute="top" secondItem="cmb-0I-e8K" secondAttribute="top" id="vHV-pG-HFJ"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <animations/>
@@ -322,6 +426,12 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="统计" image="Statistic" selectedImage="Statistic_selected" id="xqG-cM-bxY"/>
+                    <connections>
+                        <outlet property="axisYView" destination="z6q-wu-xvu" id="3j6-F7-WS9"/>
+                        <outlet property="graphScopeSegment" destination="Ev3-aI-COF" id="OI9-AP-YjN"/>
+                        <outlet property="graphScrollView" destination="spn-Zp-QSV" id="KhP-37-U7r"/>
+                        <outlet property="tableView" destination="F7y-Mp-50r" id="ODc-7T-Uty"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GQD-Kw-IpM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -398,11 +508,7 @@
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="我" id="WTO-EL-WAx">
-                                        <barButtonItem key="rightBarButtonItem" image="Setting" id="2K1-9n-Da0">
-                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </barButtonItem>
-                                    </navigationItem>
+                                    <navigationItem title="我" id="WTO-EL-WAx"/>
                                 </items>
                             </navigationBar>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aID-Ms-iie">
@@ -595,7 +701,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="yl2-sM-qoP">
             <objects>
-                <tabBarController modalTransitionStyle="flipHorizontal" id="49e-Tb-3d3" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MJTabBarController" modalTransitionStyle="flipHorizontal" useStoryboardIdentifierAsRestorationIdentifier="YES" id="49e-Tb-3d3" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" translucent="NO" id="W28-zg-YXA">
@@ -630,6 +736,7 @@
         <image name="Statistic" width="22" height="22"/>
         <image name="Statistic_selected" width="22" height="22"/>
         <image name="Timer" width="22" height="22"/>
+        <image name="Timer_Statistic" width="22" height="22"/>
         <image name="Timer_selected" width="22" height="22"/>
     </resources>
 </document>

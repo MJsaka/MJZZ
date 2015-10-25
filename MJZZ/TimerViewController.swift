@@ -16,8 +16,8 @@ enum buttonAnimationType : Int {
 
 class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDataSource,UIPickerViewDelegate {
 
+    var currentOnceData : MJZZData?
     var increaseTime : Int = 0
-    var topTime : Int = 0
     var decreaseTime : Int = 0
     var decreaseTimeDefault : Int = 5 * 60 * 100
     var increaseTimer : NSTimer!
@@ -42,16 +42,14 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.setSegmentedControlStyle()
+        setSegmentedControlStyle(segment ,fontSize : 20)
         decreaseTime = decreaseTimeDefault
-        increaseTimeLabel.text = self.stringFromTime(increaseTime)
-        decreaseTimeLabel.text = self.stringFromTime(decreaseTime)
+        increaseTimeLabel.text = stringFromTime(increaseTime)
+        decreaseTimeLabel.text = stringFromTime(decreaseTime)
         containerScrollView.delegate = self
         decreaseTimePicker.hidden = true
         increaseView.animateType = TimeAnimateType.IncreaseType
         decreaseView.animateType = TimeAnimateType.DecreaseType
-        
-        topTime = NSUserDefaults.standardUserDefaults().integerForKey("topTime")
         
         topTimeLabel.hidden = true
         topTimeTitle.hidden = true
@@ -65,21 +63,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         self.view.bringSubviewToFront(segment)
         
     }
-    func setSegmentedControlStyle(){
-        segment.setBackgroundImage(UIImage(named: "Segment_Normal")!.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0)), forState: UIControlState.Normal, barMetrics: UIBarMetrics.Default)
-        segment.setBackgroundImage(UIImage(named: "Segment_Selected")!.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 4, right: 0)), forState: UIControlState.Selected, barMetrics: UIBarMetrics.Default)
-        segment.setDividerImage(UIImage(named: "Segment_Separate")?.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0)), forLeftSegmentState: UIControlState.Normal, rightSegmentState: UIControlState.Selected, barMetrics: UIBarMetrics.Default)
-        segment.setDividerImage(UIImage(named: "Segment_Separate")?.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0)), forLeftSegmentState: UIControlState.Normal, rightSegmentState: UIControlState.Normal, barMetrics: UIBarMetrics.Default)
-        segment.setDividerImage(UIImage(named: "Segment_Separate")?.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 2, right: 0)), forLeftSegmentState: UIControlState.Selected, rightSegmentState: UIControlState.Normal, barMetrics: UIBarMetrics.Default)
-        segment.setTitleTextAttributes([
-            NSFontAttributeName : UIFont(name: "Heiti SC", size: 20)! ,
-            NSForegroundColorAttributeName : UIColor.darkGrayColor() ],
-            forState: UIControlState.Normal)
-        segment.setTitleTextAttributes([
-            NSFontAttributeName : UIFont(name: "Heiti SC", size: 20)! ,
-            NSForegroundColorAttributeName : UIColor.redColor() ],
-            forState: UIControlState.Selected)
-    }
+    
     @IBAction func segmentChanged(sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0 :
@@ -89,7 +73,6 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         default :
             break
         }
-        
     }
     func scrollViewDidEndDecelerating(scrollView: UIScrollView){
         if(containerScrollView.contentOffset.x < containerScrollView.frame.width){
@@ -98,18 +81,11 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
             segment.selectedSegmentIndex = 1
         }
     }
-    
-    func stringFromTime(aTime : Int) -> String {
-        if aTime >= 360000 {
-            return String(format:"%.2d:%.2d:%.2d.%.2d",aTime/360000 , (aTime/6000)%60 , (aTime/100)%60 , aTime%100)
-        }else{
-            return String(format:"%.2d:%.2d.%.2d",aTime/6000 , (aTime/100)%60 , aTime%100)
-        }
-    }
+
    
     func increaseTimerTrigger() {
         increaseTime += 10
-        increaseTimeLabel.text = self.stringFromTime(increaseTime)
+        increaseTimeLabel.text = stringFromTime(increaseTime)
         increaseView.animateProgress += 1/600
         increaseView.setNeedsDisplay()
     }
@@ -118,10 +94,13 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         if decreaseTime < 0 {
             decreaseTimer.invalidate()
             decreaseTimer = nil
+            currentOnceData?.duration = decreaseTimeDefault - decreaseTime
+            MJZZStatisticData.appendOnceData(currentOnceData!)
             decreaseTime = decreaseTimeDefault
-            decreaseTimeLabel.text = self.stringFromTime(decreaseTime)
+            decreaseTimeLabel.text = stringFromTime(decreaseTime)
+            self.buttonAnimation(self.decreaseButton, status: buttonAnimationType.stop)
         }else{
-            decreaseTimeLabel.text = self.stringFromTime(decreaseTime)
+            decreaseTimeLabel.text = stringFromTime(decreaseTime)
             decreaseView.animateProgress += 10.0/Double(decreaseTimeDefault)
             decreaseView.setNeedsDisplay()
         }
@@ -157,9 +136,11 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     @IBAction func increaseTimerButtonClicked(sender: UIButton) {
         if increaseTimer == nil {
             if decreaseTimer == nil {
+                currentOnceData = MJZZData()
                 increaseTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "increaseTimerTrigger", userInfo: nil, repeats: true)
+                let topTime = MJZZStatisticData.sharedData().bestOnceDuration
                 if topTime > 0 {
-                    topTimeLabel.text = self.stringFromTime(topTime)
+                    topTimeLabel.text = stringFromTime(topTime)
                     topTimeTitle.hidden = false
                     topTimeLabel.hidden = false
                 }
@@ -170,18 +151,16 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
             topTimeTitle.hidden = true
             increaseTimer.invalidate()
             increaseTimer = nil
-            if increaseTime > topTime {
-                topTime = increaseTime
-                NSUserDefaults.standardUserDefaults().setInteger(topTime, forKey: "topTime")
-                NSUserDefaults.standardUserDefaults().synchronize()
-                if topTime > decreaseTimeDefault {
-                    decreaseTimeDefault = topTime
-                    decreaseTime = decreaseTimeDefault
-                    decreaseTimeLabel.text = self.stringFromTime(decreaseTimeDefault)
-                }
+            currentOnceData?.duration = increaseTime
+            MJZZStatisticData.appendOnceData(currentOnceData!)
+            let topTime = MJZZStatisticData.sharedData().bestOnceDuration
+            if topTime > decreaseTimeDefault {
+                decreaseTimeDefault = topTime
+                decreaseTime = decreaseTimeDefault
+                decreaseTimeLabel.text = stringFromTime(decreaseTimeDefault)
             }
             increaseTime = 0
-            increaseTimeLabel.text = self.stringFromTime(increaseTime)
+            increaseTimeLabel.text = stringFromTime(increaseTime)
             increaseView.animateProgress = 0
             increaseView.setNeedsDisplay()
             self.buttonAnimation(self.increaseButton, status: buttonAnimationType.stop)
@@ -190,6 +169,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     @IBAction func decreaseTimerButtonClicked(sender: UIButton) {
         if decreaseTimer == nil {
             if increaseTimer == nil {
+                currentOnceData = MJZZData()
                 decreaseTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "decreaseTimerTrigger", userInfo: nil, repeats: true)
                 self.buttonAnimation(self.decreaseButton, status: buttonAnimationType.start)
             }
@@ -198,8 +178,10 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
             decreaseTimer = nil
             decreaseView.animateProgress = 0
             decreaseView.setNeedsDisplay()
+            currentOnceData?.duration = decreaseTimeDefault - decreaseTime
+            MJZZStatisticData.appendOnceData(currentOnceData!)
             decreaseTime = decreaseTimeDefault
-            decreaseTimeLabel.text = self.stringFromTime(decreaseTime)
+            decreaseTimeLabel.text = stringFromTime(decreaseTime)
             self.buttonAnimation(self.decreaseButton, status: buttonAnimationType.stop)
         }
     }
@@ -244,7 +226,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
             decreaseTimePicker.hidden = true
             decreaseTimeDefault = decreaseTimePicker.selectedRowInComponent(0) * 360000 + decreaseTimePicker.selectedRowInComponent(1) * 6000 + decreaseTimePicker.selectedRowInComponent(2) * 100
             decreaseTime = decreaseTimeDefault
-            decreaseTimeLabel.text = self.stringFromTime(decreaseTime)
+            decreaseTimeLabel.text = stringFromTime(decreaseTime)
             decreaseView.animateProgress = 0
             decreaseView.setNeedsDisplay()
         }
@@ -254,6 +236,30 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    func setSegmentedControlStyle(segment : UISegmentedControl, fontSize aSize : CGFloat){
+        segment.setBackgroundImage(UIImage(named: "Segment_Normal")!.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 1, right: 0)), forState: UIControlState.Normal, barMetrics: UIBarMetrics.Default)
+        segment.setBackgroundImage(UIImage(named: "Segment_Selected")!.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 3, right: 0)), forState: UIControlState.Selected, barMetrics: UIBarMetrics.Default)
+        segment.setDividerImage(UIImage(named: "Segment_Separate")?.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 1, right: 0)), forLeftSegmentState: UIControlState.Normal, rightSegmentState: UIControlState.Selected, barMetrics: UIBarMetrics.Default)
+        segment.setDividerImage(UIImage(named: "Segment_Separate")?.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 1, right: 0)), forLeftSegmentState: UIControlState.Normal, rightSegmentState: UIControlState.Normal, barMetrics: UIBarMetrics.Default)
+        segment.setDividerImage(UIImage(named: "Segment_Separate")?.resizableImageWithCapInsets(UIEdgeInsets(top: 0, left: 0, bottom: 1, right: 0)), forLeftSegmentState: UIControlState.Selected, rightSegmentState: UIControlState.Normal, barMetrics: UIBarMetrics.Default)
+        segment.setTitleTextAttributes([
+            NSFontAttributeName : UIFont(name: "Heiti SC", size: aSize)! ,
+            NSForegroundColorAttributeName : UIColor.darkGrayColor() ],
+            forState: UIControlState.Normal)
+        segment.setTitleTextAttributes([
+            NSFontAttributeName : UIFont(name: "Heiti SC", size: aSize)! ,
+            NSForegroundColorAttributeName : UIColor.redColor() ],
+            forState: UIControlState.Selected)
+    }
 
 }
+
+func stringFromTime(aTime : Int) -> String {
+    if aTime >= 360000 {
+        return String(format:"%.2d:%.2d:%.2d.%.2d",aTime/360000 , (aTime/6000)%60 , (aTime/100)%60 , aTime%100)
+    }else{
+        return String(format:"%.2d:%.2d.%.2d",aTime/6000 , (aTime/100)%60 , aTime%100)
+    }
+}
+
+

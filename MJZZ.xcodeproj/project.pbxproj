@@ -17,8 +17,11 @@
 		C523368A1BC7706D00CBBC4C /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52336891BC7706D00CBBC4C /* CommunityViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		C523368C1BC7708A00CBBC4C /* SelfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523368B1BC7708A00CBBC4C /* SelfViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		C52336CA1BC7950800CBBC4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C52336C91BC7950800CBBC4C /* Assets.xcassets */; settings = {ASSET_TAGS = (); }; };
+		C58E541B1BD71D2A00095882 /* StatisticData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58E541A1BD71D2A00095882 /* StatisticData.swift */; settings = {ASSET_TAGS = (); }; };
 		C5989C1C1BCF80FE0036BEF0 /* AnimatableTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5989C1B1BCF80FE0036BEF0 /* AnimatableTimerView.swift */; settings = {ASSET_TAGS = (); }; };
 		C5989C1E1BCF84B70036BEF0 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5989C1D1BCF84B70036BEF0 /* ScheduleViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		C5E474641BD8753F0054FD6B /* StatisticGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E474631BD8753F0054FD6B /* StatisticGraphView.swift */; settings = {ASSET_TAGS = (); }; };
+		C5E474661BD886160054FD6B /* StatisticAxisYView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E474651BD886160054FD6B /* StatisticAxisYView.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,8 +58,11 @@
 		C52336891BC7706D00CBBC4C /* CommunityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityViewController.swift; sourceTree = "<group>"; };
 		C523368B1BC7708A00CBBC4C /* SelfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfViewController.swift; sourceTree = "<group>"; };
 		C52336C91BC7950800CBBC4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C58E541A1BD71D2A00095882 /* StatisticData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticData.swift; sourceTree = "<group>"; };
 		C5989C1B1BCF80FE0036BEF0 /* AnimatableTimerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatableTimerView.swift; sourceTree = "<group>"; };
 		C5989C1D1BCF84B70036BEF0 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		C5E474631BD8753F0054FD6B /* StatisticGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticGraphView.swift; sourceTree = "<group>"; };
+		C5E474651BD886160054FD6B /* StatisticAxisYView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticAxisYView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +125,9 @@
 				C5989C1D1BCF84B70036BEF0 /* ScheduleViewController.swift */,
 				C52336591BC76DF500CBBC4C /* TimerViewController.swift */,
 				C52336871BC7702C00CBBC4C /* StatisticViewController.swift */,
+				C58E541A1BD71D2A00095882 /* StatisticData.swift */,
+				C5E474651BD886160054FD6B /* StatisticAxisYView.swift */,
+				C5E474631BD8753F0054FD6B /* StatisticGraphView.swift */,
 				C52336891BC7706D00CBBC4C /* CommunityViewController.swift */,
 				C523368B1BC7708A00CBBC4C /* SelfViewController.swift */,
 				C514A6991BCE980D00C54D34 /* Animation */,
@@ -281,9 +290,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C58E541B1BD71D2A00095882 /* StatisticData.swift in Sources */,
 				C52336581BC76DF500CBBC4C /* AppDelegate.swift in Sources */,
 				C523365A1BC76DF500CBBC4C /* TimerViewController.swift in Sources */,
 				C523368A1BC7706D00CBBC4C /* CommunityViewController.swift in Sources */,
+				C5E474661BD886160054FD6B /* StatisticAxisYView.swift in Sources */,
+				C5E474641BD8753F0054FD6B /* StatisticGraphView.swift in Sources */,
 				C523368C1BC7708A00CBBC4C /* SelfViewController.swift in Sources */,
 				C52336881BC7702C00CBBC4C /* StatisticViewController.swift in Sources */,
 				C5989C1E1BCF84B70036BEF0 /* ScheduleViewController.swift in Sources */,
