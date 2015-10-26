@@ -8,24 +8,38 @@
 
 import UIKit
 
-class MJZZTime {
+class MJZZTime : NSObject , NSCoding{
     let year : Int
     let month : Int
     let day : Int
     let hour : Int
     let minute : Int
-    convenience init() {
+    override convenience init() {
         let calendar = NSCalendar.currentCalendar()
         calendar.timeZone = NSTimeZone.systemTimeZone()
         let comp : NSDateComponents = calendar.components([.Year, .Month, .Day , .Hour , .Minute], fromDate: NSDate())
         self.init(year: comp.year , month: comp.month , day: comp.day ,hour: comp.hour , minute: comp.minute)
     }
-    required init(year aYear:Int , month aMonth : Int , day aDay : Int ,hour aHour : Int , minute aMinute : Int){
+    init(year aYear:Int , month aMonth : Int , day aDay : Int ,hour aHour : Int , minute aMinute : Int){
         year = aYear
         month = aMonth
         day = aDay
         hour = aHour
         minute = aMinute
+    }
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeInteger(year, forKey: "year")
+        aCoder.encodeInteger(month, forKey: "month")
+        aCoder.encodeInteger(day, forKey: "day")
+        aCoder.encodeInteger(hour, forKey: "hour")
+        aCoder.encodeInteger(minute, forKey: "minute")
+    }
+    required init?(coder aDecoder: NSCoder) {
+        year = aDecoder.decodeIntegerForKey("year")
+        month = aDecoder.decodeIntegerForKey("month")
+        day = aDecoder.decodeIntegerForKey("day")
+        hour = aDecoder.decodeIntegerForKey("hour")
+        minute = aDecoder.decodeIntegerForKey("minute")
     }
 }
 
@@ -76,28 +90,36 @@ class MJZZSelectedDateIndex {
     }
 }
 
-protocol MJZZDataProtocol {
+@objc protocol MJZZDataProtocol{
     var data : [MJZZDataProtocol] {get set}
     var duration : Int {get set}
     var time : MJZZTime {get set}
     func appendOnceData (aData : MJZZData)
 }
 
-class MJZZData : NSObject , MJZZDataProtocol {
+class MJZZData : NSObject , MJZZDataProtocol , NSCoding {
     var data : [MJZZDataProtocol]
     var duration : Int = 0
     var time : MJZZTime
-    
-    override init() {
-        data = [MJZZData]()
-        time = MJZZTime()
-    }
-    init(withTime aTime : MJZZTime){
-        data = [MJZZData]()
-        time = aTime
-    }
     func appendOnceData(aData: MJZZData) {
         return
+    }
+    override convenience init() {
+        self.init(withTime : MJZZTime())
+    }
+    init(withTime aTime : MJZZTime){
+        data = [MJZZDataProtocol]()
+        time = aTime
+    }
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeInteger(duration, forKey: "duration")
+        aCoder.encodeObject(time, forKey: "time")
+        aCoder.encodeObject(data, forKey: "data")
+    }
+    required init?(coder aDecoder: NSCoder) {
+        duration = aDecoder.decodeIntegerForKey("duration")
+        time = aDecoder.decodeObjectForKey("time") as! MJZZTime
+        data = aDecoder.decodeObjectForKey("data") as! [MJZZDataProtocol]
     }
 }
 
@@ -135,27 +157,27 @@ class MJZZYearData : MJZZData {
         duration += aData.duration
     }
 }
+var singletonStatisticData : MJZZStatisticData = MJZZStatisticData()
 
 class MJZZStatisticData : MJZZData{
-    private static let singleton : MJZZStatisticData = MJZZStatisticData()
     
     var bestOnceDuration : Int = 0
     
     class func appendOnceData (aData : MJZZData){
         var aYearData : MJZZYearData
-        if singleton.data.last?.time.year == aData.time.year {
-            aYearData = singleton.data.last as! MJZZYearData
+        if singletonStatisticData.data.last?.time.year == aData.time.year {
+            aYearData = singletonStatisticData.data.last as! MJZZYearData
         }else{
             aYearData = MJZZYearData(withTime: aData.time)
-            singleton.data.append(aYearData)
+            singletonStatisticData.data.append(aYearData)
         }
         aYearData.appendOnceData(aData)
-        singleton.duration += aData.duration
-        if aData.duration > singleton.bestOnceDuration {
-            singleton.bestOnceDuration = aData.duration
+        singletonStatisticData.duration += aData.duration
+        if aData.duration > singletonStatisticData.bestOnceDuration {
+            singletonStatisticData.bestOnceDuration = aData.duration
         }
     }
     class func sharedData() -> MJZZStatisticData {
-        return singleton
+        return singletonStatisticData
     }
 }

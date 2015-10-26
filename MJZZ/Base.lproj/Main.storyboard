@@ -194,7 +194,7 @@
                             <constraint firstItem="GuO-Nm-Gl8" firstAttribute="top" secondItem="Ia1-K6-d13" secondAttribute="bottom" id="vWc-44-rQE"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="计时" image="Timer" selectedImage="Timer_selected" id="lfV-Mb-4OB"/>
+                    <tabBarItem key="tabBarItem" title="计时" image="Timer" selectedImage="Timer_Selected" id="lfV-Mb-4OB"/>
                     <connections>
                         <outlet property="containerScrollView" destination="39f-HJ-TPh" id="dUl-fa-NVk"/>
                         <outlet property="decreaseButton" destination="VlA-oT-lxp" id="cfA-La-Iof"/>
@@ -270,7 +270,7 @@
                             <constraint firstItem="pWe-wG-V93" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" constant="-20" id="xvp-rd-q63"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" enabled="NO" title="训练计划" image="Schedule" selectedImage="Schedule_selected" id="cPa-gy-q4n"/>
+                    <tabBarItem key="tabBarItem" enabled="NO" title="训练计划" image="Schedule" selectedImage="Schedule_Selected" id="cPa-gy-q4n"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>
@@ -425,7 +425,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="cmb-0I-e8K" secondAttribute="trailing" constant="-20" id="zVR-oZ-eg5"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="统计" image="Statistic" selectedImage="Statistic_selected" id="xqG-cM-bxY"/>
+                    <tabBarItem key="tabBarItem" title="统计" image="Statistic" selectedImage="Statistic_Selected" id="xqG-cM-bxY"/>
                     <connections>
                         <outlet property="axisYView" destination="z6q-wu-xvu" id="3j6-F7-WS9"/>
                         <outlet property="graphScopeSegment" destination="Ev3-aI-COF" id="OI9-AP-YjN"/>
@@ -482,7 +482,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="V0W-Ez-gEl" secondAttribute="trailing" constant="-20" id="vrD-gy-ZDN"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" enabled="NO" title="社区" image="Community" selectedImage="Community_selected" id="XEM-BE-Afd"/>
+                    <tabBarItem key="tabBarItem" enabled="NO" title="社区" image="Community" selectedImage="Community_Selected" id="XEM-BE-Afd"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="owf-B6-B34" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -531,7 +531,7 @@
                             <constraint firstItem="aID-Ms-iie" firstAttribute="top" secondItem="ed4-L0-gTT" secondAttribute="bottom" id="xDv-m0-1Wf"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="我" image="Self" selectedImage="Self_selected" id="ldq-av-iH6"/>
+                    <tabBarItem key="tabBarItem" title="我" image="Self" selectedImage="Self_Selected" id="ldq-av-iH6"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sPR-ZZ-CqN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -725,18 +725,18 @@
         <image name="Avator" width="100" height="100"/>
         <image name="Camera" width="22" height="22"/>
         <image name="Community" width="22" height="22"/>
-        <image name="Community_selected" width="22" height="22"/>
+        <image name="Community_Selected" width="22" height="22"/>
         <image name="Icon_Button_Normal" width="50" height="50"/>
         <image name="Rank" width="22" height="22"/>
         <image name="Schedule" width="22" height="22"/>
-        <image name="Schedule_selected" width="22" height="22"/>
+        <image name="Schedule_Selected" width="22" height="22"/>
         <image name="Self" width="22" height="22"/>
-        <image name="Self_selected" width="22" height="22"/>
+        <image name="Self_Selected" width="22" height="22"/>
         <image name="Setting" width="22" height="22"/>
         <image name="Statistic" width="22" height="22"/>
-        <image name="Statistic_selected" width="22" height="22"/>
+        <image name="Statistic_Selected" width="22" height="22"/>
         <image name="Timer" width="22" height="22"/>
+        <image name="Timer_Selected" width="22" height="22"/>
         <image name="Timer_Statistic" width="22" height="22"/>
-        <image name="Timer_selected" width="22" height="22"/>
     </resources>
 </document>

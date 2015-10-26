@@ -34,9 +34,6 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
 
     
     let selectedDateIndex : MJZZSelectedDateIndex = MJZZSelectedDateIndex.selectedIndex()
-    let statisticData : MJZZStatisticData = MJZZStatisticData.sharedData()
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,18 +45,18 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         graphScrollView.addSubview(graphView)
         graphScrollView.contentOffset = CGPoint(x: 0, y: 0)
         
-        for i in 2011 ... 2015 {
-            let aYear : Int = i
-            for j in 1 ... 10 {
-                let aMonth : Int = j
-                for k in 1 ... 25 {
-                    let aDay : Int = k
-                    let aData : MJZZData = MJZZData(withTime: MJZZTime(year: aYear, month: aMonth, day: aDay, hour: 0, minute: 0))
-                    aData.duration = random() % 360000
-                    MJZZStatisticData.appendOnceData(aData)
-                }
-            }
-        }
+//        for i in 2011 ... 2015 {
+//            let aYear : Int = i
+//            for j in 1 ... 10 {
+//                let aMonth : Int = j
+//                for k in 1 ... 27 {
+//                    let aDay : Int = k
+//                    let aData : MJZZData = MJZZData(withTime: MJZZTime(year: aYear, month: aMonth, day: aDay, hour: 0, minute: 0))
+//                    aData.duration = random() % 360000
+//                    MJZZStatisticData.appendOnceData(aData)
+//                }
+//            }
+//        }
         refreshAll()
     }
     
@@ -90,6 +87,7 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         if selectedDateIndex.yearIndex == -1 {
             return
         }
+        let statisticData : MJZZStatisticData = MJZZStatisticData.sharedData()
         
         let selectedYearData = statisticData.data[selectedDateIndex.yearIndex] as! MJZZYearData
         let selectedMonthData = selectedYearData.data[selectedDateIndex.monthIndex] as! MJZZMonthData
