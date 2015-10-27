@@ -43,50 +43,19 @@ class MJZZTime : NSObject , NSCoding{
     }
 }
 
-class MJZZSelectedDateIndex {
+class MJZZDateIndex {
     var yearIndex : Int
     var monthIndex : Int
     var dayIndex : Int
-    private static let singleton : MJZZSelectedDateIndex = MJZZSelectedDateIndex()
+    private static let singleton : MJZZDateIndex = MJZZDateIndex()
     
     init(){
-        yearIndex = -1
-        monthIndex = -1
-        dayIndex = -1
+            yearIndex = 0
+            monthIndex = 0
+            dayIndex = 0
     }
-    class func selectedIndex() -> MJZZSelectedDateIndex{
+    class func currentIndex() -> MJZZDateIndex{
         return singleton
-    }
-    class func updateIndex() {
-        let statisticData = MJZZStatisticData.sharedData()
-        if singleton.yearIndex == -1 {
-            if statisticData.data.count != 0 {
-                //只要yearData存在，一定有dayData存在
-                let aYearData = statisticData.data.last!
-                singleton.yearIndex = aYearData.time.year - statisticData.data[0].time.year
-                
-                let aMonthData = aYearData.data.last!
-                singleton.monthIndex = aMonthData.time.month - aYearData.data[0].time.month
-                
-                let aDayData = aMonthData.data.last!
-                singleton.dayIndex = aDayData.time.day - aMonthData.data[0].time.day
-            }
-        } else if singleton.monthIndex == -1 {
-            let aYearData = statisticData.data[singleton.yearIndex]
-            
-            let aMonthData = aYearData.data.last!
-            singleton.monthIndex = aMonthData.time.month - aYearData.data[0].time.month
-            
-            let aDayData = aMonthData.data.last!
-            singleton.dayIndex = aDayData.time.day - aMonthData.data[0].time.day
-
-        } else if singleton.dayIndex == -1 {
-            let aYearData = statisticData.data[singleton.yearIndex]
-            let aMonthData = aYearData.data[singleton.monthIndex]
-            let aDayData = aMonthData.data.last!
-            singleton.dayIndex = aDayData.time.day - aMonthData.data[0].time.day
-
-        }
     }
 }
 
@@ -125,7 +94,7 @@ class MJZZData : NSObject , MJZZDataProtocol , NSCoding {
 
 class MJZZDayData : MJZZData {
     override func appendOnceData(aData : MJZZData){
-        data.append(aData)
+        data.insert(aData, atIndex: 0)
         duration += aData.duration
     }
 }
@@ -133,11 +102,11 @@ class MJZZDayData : MJZZData {
 class MJZZMonthData : MJZZData {
     override func appendOnceData (aData : MJZZData){
         var aDayData : MJZZDayData
-        if data.last?.time.day == aData.time.day{
-            aDayData = data.last as! MJZZDayData
+        if data.count != 0 && data[0].time.day == aData.time.day{
+            aDayData = data[0] as! MJZZDayData
         }else{
             aDayData = MJZZDayData(withTime: aData.time)
-            data.append(aDayData)
+            data.insert(aDayData, atIndex: 0)
         }
         aDayData.appendOnceData(aData)
         duration += aData.duration
@@ -147,11 +116,11 @@ class MJZZMonthData : MJZZData {
 class MJZZYearData : MJZZData {
     override func appendOnceData (aData : MJZZData){
         var aMonthData : MJZZMonthData
-        if data.last?.time.month == aData.time.month {
-            aMonthData = data.last as! MJZZMonthData
+        if data.count != 0 && data[0].time.month == aData.time.month {
+            aMonthData = data[0] as! MJZZMonthData
         }else{
             aMonthData = MJZZMonthData(withTime: aData.time)
-            data.append(aMonthData)
+            data.insert(aMonthData, atIndex: 0)
         }
         aMonthData.appendOnceData(aData)
         duration += aData.duration
@@ -165,11 +134,11 @@ class MJZZStatisticData : MJZZData{
     
     class func appendOnceData (aData : MJZZData){
         var aYearData : MJZZYearData
-        if singletonStatisticData.data.last?.time.year == aData.time.year {
-            aYearData = singletonStatisticData.data.last as! MJZZYearData
+        if singletonStatisticData.data.count != 0 && singletonStatisticData.data[0].time.year == aData.time.year {
+            aYearData = singletonStatisticData.data[0] as! MJZZYearData
         }else{
             aYearData = MJZZYearData(withTime: aData.time)
-            singletonStatisticData.data.append(aYearData)
+            singletonStatisticData.data.insert(aYearData, atIndex: 0)
         }
         aYearData.appendOnceData(aData)
         singletonStatisticData.duration += aData.duration

@@ -18,9 +18,9 @@ class MJZZGraphView: UIView {
     
     var axisYMinDuration : Int = 0
     var axisYMaxDuration : Int = 0
-    var currentGraphDataArray : [MJZZDataProtocol]!
-    var selectedGraphDataIndex : Int = 0
+    var selectedDateIndex : MJZZDateIndex = MJZZDateIndex.currentIndex()
     var selectedGraphScope : GraphScope = GraphScope.year
+    var currentGraphDataArray : [MJZZDataProtocol]!
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func drawRect(rect: CGRect) {
@@ -43,11 +43,36 @@ class MJZZGraphView: UIView {
         let path : CGMutablePathRef = CGPathCreateMutable();
 
         for index in 0 ..< currentGraphDataArray.count{
-            let position = currentGraphDataArray.count - 1 - index
+            //绘制X轴坐标
+            CGContextSetRGBFillColor(context, 0.6, 0.6, 0.6, 1)
+            CGContextFillRect(context, CGRect(x: 20 + CGFloat(index) * 40, y: pointYOfAxisX - 8, width: 1, height: 8))
+            //绘制X轴文字
+            var axisXSectionTitle : NSString
+            var selectedDateIndexOfCurrentScope : Int
+            switch selectedGraphScope {
+            case .year :
+                axisXSectionTitle = NSString(format: "%.2d",currentGraphDataArray[index].time.year%100)
+                selectedDateIndexOfCurrentScope = selectedDateIndex.yearIndex
+            case .month :
+                axisXSectionTitle = NSString(format: "%.2d",currentGraphDataArray[index].time.month)
+                selectedDateIndexOfCurrentScope = selectedDateIndex.monthIndex
+            case .day :
+                axisXSectionTitle = NSString(format: "%.2d",currentGraphDataArray[index].time.day)
+                selectedDateIndexOfCurrentScope = selectedDateIndex.dayIndex
+            }
+            let center = CGPoint(x: 10 + CGFloat(index) * 40, y: pointYOfAxisX + 10)
+            
+            let attr : [ String : AnyObject] = [
+                NSFontAttributeName : UIFont.monospacedDigitSystemFontOfSize(15, weight: UIFontWeightRegular) ,
+                NSForegroundColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0)
+            ]
+            axisXSectionTitle.drawAtPoint(center, withAttributes: attr)
+            
+            //绘制graph
             let aDetaDuration : Int = currentGraphDataArray[index].duration - axisYMinDuration
             let rate = CGFloat(aDetaDuration)/CGFloat(maxDetaDuration)
             if index == 0{
-                CGPathMoveToPoint(path, nil, 20 + CGFloat(position) * 40, pointYOfAxisX - maxHeight * rate)
+                CGPathMoveToPoint(path, nil, 20 + CGFloat(index) * 40, pointYOfAxisX - maxHeight * rate)
             }
             switch rate {
             case 0 ..< 0.2 :
@@ -63,39 +88,20 @@ class MJZZGraphView: UIView {
             default :
                 break
             }
-            CGContextAddArc(context, 20 + CGFloat(position) * 40, pointYOfAxisX - maxHeight * rate, 5, CGFloat(M_PI_2), CGFloat(7 * M_PI_2), 0)
+            CGContextAddArc(context, 20 + CGFloat(index) * 40, pointYOfAxisX - maxHeight * rate, 5, CGFloat(M_PI_2), CGFloat(7 * M_PI_2), 0)
             //绘制圆点
-            if index == selectedGraphDataIndex {
+            if index == selectedDateIndexOfCurrentScope {
                 CGContextDrawPath(context, CGPathDrawingMode.FillStroke)
             } else {
                 CGContextDrawPath(context, CGPathDrawingMode.Fill)
             }
             //添加线
             if index > 0 {
-                CGPathAddLineToPoint(path, nil, 20 + CGFloat(position) * 40, pointYOfAxisX - maxHeight * rate)
+                CGPathAddLineToPoint(path, nil, 20 + CGFloat(index) * 40, pointYOfAxisX - maxHeight * rate)
             }
             
-            //绘制X轴坐标
-            CGContextSetRGBFillColor(context, 0.6, 0.6, 0.6, 1)
-            CGContextFillRect(context, CGRect(x: 20 + CGFloat(position) * 40, y: pointYOfAxisX - 8, width: 1, height: 8))
-            //绘制X轴文字
-            var axisXSectionTitle : NSString
-            switch selectedGraphScope {
-            case .year :
-                axisXSectionTitle = NSString(format: "%.2d",currentGraphDataArray[index].time.year%100)
-            case .month :
-                axisXSectionTitle = NSString(format: "%.2d",currentGraphDataArray[index].time.month)
-            case .day :
-                axisXSectionTitle = NSString(format: "%.2d",currentGraphDataArray[index].time.day)
-            }
-            let center = CGPoint(x: 10 + CGFloat(position) * 40, y: pointYOfAxisX + 10)
-            
-            let attr : [ String : AnyObject] = [
-                NSFontAttributeName : UIFont.monospacedDigitSystemFontOfSize(15, weight: UIFontWeightRegular) ,
-                NSForegroundColorAttributeName : UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1.0)
-            ]
-            axisXSectionTitle.drawAtPoint(center, withAttributes: attr)
         }
+        //绘制折线
         CGContextAddPath(context, path);
         CGContextDrawPath(context, CGPathDrawingMode.Stroke)
     }
