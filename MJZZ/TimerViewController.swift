@@ -19,7 +19,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     var currentOnceData : MJZZData?
     var increaseTime : Int = 0
     var decreaseTime : Int = 0
-    var decreaseTimeDefault : Int = 5 * 60 * 100
+    var decreaseTimeDefault : Int = MJZZStatisticData.sharedData().bestOnceDuration
     var increaseTimer : NSTimer!
     var decreaseTimer : NSTimer!
     
@@ -45,7 +45,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         setSegmentedControlStyle(segment ,fontSize : 20)
         decreaseTime = decreaseTimeDefault
         increaseTimeLabel.text = stringFromTime(increaseTime)
-        decreaseTimeLabel.text = stringFromTime(decreaseTime)
+        decreaseTimeLabel.text = stringFromTime(decreaseTimeDefault)
         containerScrollView.delegate = self
         decreaseTimePicker.hidden = true
         increaseView.animateType = TimeAnimateType.IncreaseType
@@ -107,30 +107,21 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     }
     
     func buttonAnimation(button : UIButton , status : buttonAnimationType){
-        UIView.animateKeyframesWithDuration(0.5, delay: 0, options:UIViewKeyframeAnimationOptions.BeginFromCurrentState, animations: { () -> Void in
-            UIView.addKeyframeWithRelativeStartTime(0, relativeDuration: 0.25, animations: { () -> Void in
-                button.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
-            })
-            UIView.addKeyframeWithRelativeStartTime(0.25, relativeDuration: 0.25, animations: { () -> Void in
-                button.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-            })
-            UIView.addKeyframeWithRelativeStartTime(0.5, relativeDuration: 0.25, animations: { () -> Void in
-                button.transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2 * 3))
-            })
-            
-            UIView.addKeyframeWithRelativeStartTime(0.75, relativeDuration: 0.25, animations: { () -> Void in
-                button.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 2))
-                button.alpha = 0.5
-            })
-            }, completion:{ (finished) -> Void in
+        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+            button.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI_2), 0, 1, 0)
+            }) { (finished) -> Void in
                 switch status {
                 case buttonAnimationType.start :
                     button.setImage(UIImage(named: "Icon_Button_Clicked"), forState: UIControlState.Normal)
                 case buttonAnimationType.stop :
                     button.setImage(UIImage(named: "Icon_Button_Normal"), forState: UIControlState.Normal)
                 }
-                button.alpha = 1.0
-        })
+                UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+                    button.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI), 0, 1, 0)
+                    }) {  (finished) -> Void in
+                        
+                }
+        }
     }
     
     @IBAction func increaseTimerButtonClicked(sender: UIButton) {
