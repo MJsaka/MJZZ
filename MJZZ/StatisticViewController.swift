@@ -7,26 +7,38 @@
 //
 
 import UIKit
-
-class StatisticViewController: UIViewController , UITableViewDataSource ,UITableViewDelegate {
-
-    @IBOutlet weak var axisY5: UILabel!
-    @IBOutlet weak var axisY4: UILabel!
-    @IBOutlet weak var axisY3: UILabel!
-    @IBOutlet weak var axisY2: UILabel!
-    @IBOutlet weak var axisY1: UILabel!
-
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var graphScrollView: UIScrollView!
+class MJZZDataIndex : NSObject{
+    var yearIndex : Int
+    var monthIndex : Int
+    var dayIndex : Int
+    var index : Int
     
+    override init(){
+        yearIndex = 0
+        monthIndex = 0
+        dayIndex = 0
+        index = 0
+    }
+}
+@objc enum MJZZDataScope : Int{
+    case year
+    case month
+    case day
+}
+class StatisticViewController: UIViewController , UITableViewDataSource ,UITableViewDelegate {
+    
+    @IBOutlet weak var leftBarButtonItems: UIBarButtonItem!
+    @IBOutlet weak var rightBarButtonItem: UIBarButtonItem!
+    
+    @IBOutlet weak var graphScrollView: UIScrollView!
+    @IBOutlet weak var graphScopeSegment: UISegmentedControl!
     @IBOutlet weak var axisYView: StatisticAxisYView!
     let graphView : MJZZGraphView = MJZZGraphView()
-
-    @IBOutlet weak var graphScopeSegment: UISegmentedControl!
+    @IBOutlet weak var tableView: UITableView!
     
-    let selectedDateIndex : MJZZDateIndex = MJZZDateIndex.currentIndex()
-    var selectedGraphScope : GraphScope = GraphScope.year
-    var currentGraphDataArray : [MJZZDataProtocol]!
+    let selectedDataIndex : MJZZDataIndex = MJZZDataIndex()
+    var selectedDataScope : MJZZDataScope = MJZZDataScope.year
+    var currentDataArray : [MJZZDataProtocol] = MJZZStatisticData.sharedData().data
     var axisYMinDuration : Int = 0
     var axisYMaxDuration : Int = 0
     
@@ -34,6 +46,7 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         super.viewDidLoad()
         // Do any additional setup after loading the view.
 
+        leftBarButtonItems.title = ""
         setSegmentedControlStyle(graphScopeSegment , fontSize : 16)
         
         graphView.backgroundColor = UIColor.whiteColor()
@@ -41,6 +54,7 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         graphScrollView.contentOffset = CGPoint(x: 0, y: 0)
         let graphViewTapGesture = UITapGestureRecognizer(target: self, action: "graphViewTaped:")
         graphView.addGestureRecognizer(graphViewTapGesture)
+        graphView.setNeedsDisplay()
         if !NSUserDefaults.standardUserDefaults().boolForKey("hasStatisticData") {
             for i in 2001 ... MJZZTime().year{
                 let aYear : Int = i
@@ -55,22 +69,26 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
                 }
             }
         }
-        refreshAll()
     }
     
     override func viewWillAppear(animated: Bool) {
         refreshAll()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        tableView.setEditing(false, animated: true)
+        rightBarButtonItem.title = "编辑"
+        leftBarButtonItems.title = ""
+    }
     
-    @IBAction func graphScopeChanged(sender: UISegmentedControl) {
+    @IBAction func graphScopeSegmentChanged(sender: UISegmentedControl) {
         switch graphScopeSegment.selectedSegmentIndex {
         case 0 :
-            selectedGraphScope = .year
+            selectedDataScope = .year
         case 1 :
-            selectedGraphScope = .month
+            selectedDataScope = .month
         case 2 :
-            selectedGraphScope = .day
+            selectedDataScope = .day
         default :
             break
         }
@@ -80,44 +98,71 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
     
     func graphViewTaped(sender : UITapGestureRecognizer) {
         let index : Int = Int(sender.locationInView(graphView).x) / 40
-        if index < currentGraphDataArray.count {
-            let aDuration : Int = currentGraphDataArray[index].duration
+        if index < currentDataArray.count {
+            let aDuration : Int = currentDataArray[index].duration
             let aY : CGFloat = (1.0 - CGFloat( aDuration - axisYMinDuration ) / CGFloat( axisYMaxDuration - axisYMinDuration )) * graphView.frame.height * 0.85
-            if abs(aY - sender.locationInView(graphView).y) < 20 {
-                switch selectedGraphScope {
+            if abs(aY - sender.locationInView(graphView).y) < 20 || sender.locationInView(graphView).y > graphView.frame.height * 0.85 {
+                switch selectedDataScope {
                 case .year :
-                    selectedDateIndex.yearIndex = index
+                    selectedDataIndex.yearIndex = index
+                    selectedDataIndex.monthIndex = 0
+                    selectedDataIndex.dayIndex = 0
                 case .month :
-                    selectedDateIndex.monthIndex = index
+                    selectedDataIndex.monthIndex = index
+                    selectedDataIndex.dayIndex = 0
                 case .day :
-                    selectedDateIndex.dayIndex = index
+                    selectedDataIndex.dayIndex = index
                 }
                 self.refreshAll()
             }
         }
     }
     
-    func refreshAll() {
+    func updataSelectedDataIndexAndScope() {
         let statisticData : MJZZStatisticData = MJZZStatisticData.sharedData()
-        if statisticData.data.count == 0 {
+        if statisticData.data.isEmpty{
             return
         }
-        switch selectedGraphScope {
+        if selectedDataIndex.yearIndex >= statisticData.data.count {
+            selectedDataIndex.yearIndex = statisticData.data.count - 1
+            selectedDataScope = MJZZDataScope.year
+            graphScopeSegment.selectedSegmentIndex = 0
+            return
+        }
+        let selectedYearData = statisticData.data[selectedDataIndex.yearIndex]
+        if selectedDataIndex.monthIndex >= selectedYearData.data.count {
+            selectedDataIndex.monthIndex = selectedYearData.data.count - 1
+            selectedDataScope = MJZZDataScope.month
+            graphScopeSegment.selectedSegmentIndex = 1
+            return
+        }
+        let selectedMonthData = selectedYearData.data[selectedDataIndex.monthIndex]
+        if selectedDataIndex.dayIndex >= selectedMonthData.data.count {
+            selectedDataIndex.dayIndex = selectedMonthData.data.count - 1
+            selectedDataScope = MJZZDataScope.day
+            graphScopeSegment.selectedSegmentIndex = 2
+        }
+    }
+    
+    func refreshAll() {
+        let statisticData : MJZZStatisticData = MJZZStatisticData.sharedData()
+        if statisticData.data.isEmpty{
+            return
+        }
+        switch selectedDataScope {
         case .year :
-            currentGraphDataArray = statisticData.data
+            currentDataArray = statisticData.data
         case .month :
-            let selectedYearData = statisticData.data[selectedDateIndex.yearIndex] as! MJZZYearData
-            
-            currentGraphDataArray = selectedYearData.data
+            let selectedYearData = statisticData.data[selectedDataIndex.yearIndex]
+            currentDataArray = selectedYearData.data
         case .day :
-            let selectedYearData = statisticData.data[selectedDateIndex.yearIndex] as! MJZZYearData
-            let selectedMonthData = selectedYearData.data[selectedDateIndex.monthIndex] as! MJZZMonthData
-
-            currentGraphDataArray = selectedMonthData.data
+            let selectedYearData = statisticData.data[selectedDataIndex.yearIndex]
+            let selectedMonthData = selectedYearData.data[selectedDataIndex.monthIndex]
+            currentDataArray = selectedMonthData.data
         }
         var longestGraphDataDuration : Int = 0
         var shortestGraphDataDuration = Int(INT64_MAX)
-        for aData in currentGraphDataArray {
+        for aData in currentDataArray {
             if aData.duration > longestGraphDataDuration {
                 longestGraphDataDuration = aData.duration
             }
@@ -133,19 +178,39 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
     }
     
     func refreshGraphView() {
-        graphView.currentGraphDataArray = currentGraphDataArray
+        graphView.currentDataArray = currentDataArray
         graphView.axisYMinDuration = axisYMinDuration
         graphView.axisYMaxDuration = axisYMaxDuration
-        graphView.selectedGraphScope = selectedGraphScope
+        graphView.selectedDataScope = selectedDataScope
+        graphView.selectedDataIndex = selectedDataIndex
         graphView.frame.size.height = axisYView.frame.height
-        var aWidth : CGFloat = CGFloat(currentGraphDataArray.count * 40 + 80)
+        var aWidth : CGFloat = CGFloat(currentDataArray.count * 40 + 80)
         if aWidth < self.view.frame.width {
             aWidth = self.view.frame.width
         }
         graphView.frame.size.width = aWidth
         graphView.frame.origin = CGPoint(x: 0, y: 0)
         graphScrollView.contentSize = graphView.frame.size
+        var index : Int
+        switch selectedDataScope {
+        case .year :
+            index = selectedDataIndex.yearIndex
+        case .month :
+            index = selectedDataIndex.monthIndex
+        case .day :
+            index = selectedDataIndex.dayIndex
+        }
+        var scrollX : CGFloat = CGFloat(40 * index) - 0.3 * graphScrollView.frame.width
+        let minScrollX : CGFloat = 0
+        let maxScrollX : CGFloat = graphView.frame.width - graphScrollView.frame.width
+        if scrollX > maxScrollX {
+            scrollX = maxScrollX
+        }else if scrollX < minScrollX {
+            scrollX = minScrollX
+        }
+        graphScrollView.setContentOffset(CGPoint(x: scrollX, y: 0), animated: true)
         graphView.setNeedsDisplay()
+
     }
     func refreshGraphAxisYView() {
         axisYView.axisYMinDuration = axisYMinDuration
@@ -153,32 +218,68 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         axisYView.setNeedsDisplay()
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
-        var selectedDateIndexOfCurrentScope : Int
-        switch selectedGraphScope {
-        case .year :
-            selectedDateIndexOfCurrentScope = selectedDateIndex.yearIndex
-        case .month :
-            selectedDateIndexOfCurrentScope = selectedDateIndex.monthIndex
-        case .day :
-            selectedDateIndexOfCurrentScope = selectedDateIndex.dayIndex
+    
+    @IBAction func editClicked(sender: UIBarButtonItem) {
+        if tableView.editing {
+            tableView.setEditing(false, animated: true)
+            rightBarButtonItem.title = "编辑"
+            leftBarButtonItems.title = ""
+        } else {
+            tableView.setEditing(true, animated: true)
+            rightBarButtonItem.title = "完成"
         }
-        return currentGraphDataArray[selectedDateIndexOfCurrentScope].data.count
+    }
+    
+    
+    @IBAction func deleteClicked(sender: UIBarButtonItem) {
+        if let indexPaths : [NSIndexPath] = tableView.indexPathsForSelectedRows {
+            var indexes : [Int] = [Int]()
+            for indexPath in indexPaths {
+                indexes.append(indexPath.row)
+            }
+            indexes = indexes.sort()
+            MJZZStatisticData.deleteDataAtIndexes(indexes, withSelectedDataIndex: selectedDataIndex, withSelectedDataScope: selectedDataScope)
+            leftBarButtonItems.title = ""
+            self.updataSelectedDataIndexAndScope()
+            self.refreshAll()
+        }
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        var aNum : Int = 0
+        if currentDataArray.count != 0 {
+            var selectedDataIndexOfCurrentScope : Int = 0
+
+            switch selectedDataScope {
+            case .year :
+                selectedDataIndexOfCurrentScope = selectedDataIndex.yearIndex
+            case .month :
+                selectedDataIndexOfCurrentScope = selectedDataIndex.monthIndex
+            case .day :
+                selectedDataIndexOfCurrentScope = selectedDataIndex.dayIndex
+            }
+            aNum = currentDataArray[selectedDataIndexOfCurrentScope].data.count
+        }
+        return aNum
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         var aString : String
-        var aTime : MJZZTime
-        switch selectedGraphScope{
-        case .year :
-            aTime = currentGraphDataArray[selectedDateIndex.yearIndex].time
-            aString = String(format:"%d年每月累计时长",aTime.year)
-        case .month :
-            aTime = currentGraphDataArray[selectedDateIndex.monthIndex].time
-            aString = String(format:"%d年%d月每天累计时长",aTime.year,aTime.month)
-        case .day :
-            aTime = currentGraphDataArray[selectedDateIndex.dayIndex].time
-            aString = String(format:"%d年%d月%d天每次时长",aTime.year,aTime.month,aTime.day)
+        if currentDataArray.count != 0 {
+            var aTime : MJZZTime
+            switch selectedDataScope{
+            case .year :
+                aTime = currentDataArray[selectedDataIndex.yearIndex].time
+                aString = String(format:"%d年每月累计时长",aTime.year)
+            case .month :
+                aTime = currentDataArray[selectedDataIndex.monthIndex].time
+                aString = String(format:"%d年%d月每天累计时长",aTime.year,aTime.month)
+            case .day :
+                aTime = currentDataArray[selectedDataIndex.dayIndex].time
+                aString = String(format:"%d年%d月%d天每次时长",aTime.year,aTime.month,aTime.day)
+            }
+        } else {
+            aString = "您还没有任何锻炼数据"
         }
         return aString
     }
@@ -189,29 +290,59 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         let durationLabel : UILabel = aCell.viewWithTag(3) as! UILabel
         
         var aData : MJZZDataProtocol
-        
-        switch selectedGraphScope{
+        switch selectedDataScope{
         case .year :
-            aData = currentGraphDataArray[selectedDateIndex.yearIndex].data[indexPath.row]
+            aData = currentDataArray[selectedDataIndex.yearIndex].data[indexPath.row]
             durationLabel.text = compactStringFromTime(aData.duration)
             startTimeLabel.text = String(format:"%d月",aData.time.month)
         case .month :
-            aData = currentGraphDataArray[selectedDateIndex.monthIndex].data[indexPath.row]
+            aData = currentDataArray[selectedDataIndex.monthIndex].data[indexPath.row]
             durationLabel.text = compactStringFromTime(aData.duration)
             startTimeLabel.text = String(format:"%d日",aData.time.day)
         case .day :
-            aData = currentGraphDataArray[selectedDateIndex.dayIndex].data[indexPath.row]
+            aData = currentDataArray[selectedDataIndex.dayIndex].data[indexPath.row]
             durationLabel.text = compactStringFromTime(aData.duration)
             startTimeLabel.text = String(format:"%.2d:%.2d",aData.time.hour,aData.time.minute)
         }
         return aCell
     }
-    
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool{
-        if selectedGraphScope == GraphScope.day {
-            return true
-        }else {
-            return false
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            MJZZStatisticData.deleteDataAtIndexes([indexPath.row], withSelectedDataIndex: selectedDataIndex, withSelectedDataScope: selectedDataScope)
+            self.updataSelectedDataIndexAndScope()
+            self.refreshAll()
+        }
+    }
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle{
+        return UITableViewCellEditingStyle.Delete
+    }
+    func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String?{
+        return "删除"
+    }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
+        if !tableView.editing {
+            switch selectedDataScope{
+            case .year :
+                selectedDataScope = MJZZDataScope.month
+                selectedDataIndex.monthIndex = indexPath.row
+                graphScopeSegment.selectedSegmentIndex = 1
+            case .month :
+                selectedDataScope = MJZZDataScope.day
+                selectedDataIndex.dayIndex = indexPath.row
+                graphScopeSegment.selectedSegmentIndex = 2
+            case .day :
+                break
+            }
+            self.refreshAll()
+        } else {
+            if (tableView.indexPathsForSelectedRows != nil) {
+                leftBarButtonItems.title = "删除"
+            }
+        }
+    }
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        if (tableView.indexPathsForSelectedRows == nil) {
+            leftBarButtonItems.title = ""
         }
     }
     

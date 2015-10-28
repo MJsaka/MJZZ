@@ -297,8 +297,17 @@
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="统计" id="8bR-Eg-gjZ">
+                                        <barButtonItem key="leftBarButtonItem" title="删除" id="erC-tS-oJ3">
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <connections>
+                                                <action selector="deleteClicked:" destination="L2B-Iw-6E8" id="EOL-SI-wbW"/>
+                                            </connections>
+                                        </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" title="编辑" id="be3-rv-Uhk">
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <connections>
+                                                <action selector="editClicked:" destination="L2B-Iw-6E8" id="0Fc-Es-JJf"/>
+                                            </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
@@ -319,7 +328,7 @@
                                         </segments>
                                         <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <action selector="graphScopeChanged:" destination="L2B-Iw-6E8" eventType="valueChanged" id="5ZD-CH-onL"/>
+                                            <action selector="graphScopeSegmentChanged:" destination="L2B-Iw-6E8" eventType="valueChanged" id="OAg-jx-tJV"/>
                                         </connections>
                                     </segmentedControl>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spn-Zp-QSV">
@@ -334,7 +343,7 @@
                                             <constraint firstAttribute="width" constant="100" id="z59-44-qTF"/>
                                         </constraints>
                                     </view>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="F7y-Mp-50r">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="F7y-Mp-50r">
                                         <rect key="frame" x="0.0" y="322" width="600" height="165"/>
                                         <animations/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -347,14 +356,14 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="startDateLabel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Shx-BP-zNz">
-                                                            <rect key="frame" x="10" y="11" width="600" height="21"/>
+                                                            <rect key="frame" x="18" y="11" width="200" height="21"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="18"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="durationLabel" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tHp-f4-EAx">
-                                                            <rect key="frame" x="-36" y="11" width="600" height="21"/>
+                                                            <rect key="frame" x="364" y="11" width="200" height="21"/>
                                                             <animations/>
                                                             <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="18"/>
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -371,17 +380,17 @@
                                                     </subviews>
                                                     <animations/>
                                                     <constraints>
-                                                        <constraint firstItem="Shx-BP-zNz" firstAttribute="width" secondItem="6rm-Tw-dNw" secondAttribute="width" id="Ekq-cX-AI4"/>
                                                         <constraint firstItem="Shx-BP-zNz" firstAttribute="centerY" secondItem="6rm-Tw-dNw" secondAttribute="centerY" id="RLW-da-qwG"/>
-                                                        <constraint firstItem="Shx-BP-zNz" firstAttribute="leading" secondItem="6rm-Tw-dNw" secondAttribute="leading" constant="10" id="V44-lW-zdn"/>
-                                                        <constraint firstItem="tHp-f4-EAx" firstAttribute="trailing" secondItem="6rm-Tw-dNw" secondAttribute="trailing" constant="-36" id="aIy-9O-zcM"/>
+                                                        <constraint firstItem="Shx-BP-zNz" firstAttribute="leading" secondItem="6rm-Tw-dNw" secondAttribute="leadingMargin" constant="10" id="VRn-S6-XVw"/>
+                                                        <constraint firstItem="abV-er-gFd" firstAttribute="leading" secondItem="tHp-f4-EAx" secondAttribute="trailing" constant="10" id="gUx-4R-9m4"/>
                                                         <constraint firstItem="tHp-f4-EAx" firstAttribute="centerY" secondItem="6rm-Tw-dNw" secondAttribute="centerY" id="hlt-8G-bnk"/>
-                                                        <constraint firstItem="tHp-f4-EAx" firstAttribute="width" secondItem="6rm-Tw-dNw" secondAttribute="width" id="ub6-L2-neB"/>
                                                         <constraint firstItem="abV-er-gFd" firstAttribute="centerY" secondItem="6rm-Tw-dNw" secondAttribute="centerY" id="yif-79-LRH"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <animations/>
                                                 <constraints>
+                                                    <constraint firstItem="Shx-BP-zNz" firstAttribute="width" secondItem="FLb-mu-Vcz" secondAttribute="width" multiplier="1:3" id="M37-Mh-yVe"/>
+                                                    <constraint firstItem="tHp-f4-EAx" firstAttribute="width" secondItem="FLb-mu-Vcz" secondAttribute="width" multiplier="1:3" id="n23-rE-e7B"/>
                                                     <constraint firstItem="abV-er-gFd" firstAttribute="trailing" secondItem="FLb-mu-Vcz" secondAttribute="trailing" constant="-10" id="qfV-z4-KRM"/>
                                                 </constraints>
                                             </tableViewCell>
@@ -430,6 +439,8 @@
                         <outlet property="axisYView" destination="z6q-wu-xvu" id="3j6-F7-WS9"/>
                         <outlet property="graphScopeSegment" destination="Ev3-aI-COF" id="OI9-AP-YjN"/>
                         <outlet property="graphScrollView" destination="spn-Zp-QSV" id="KhP-37-U7r"/>
+                        <outlet property="leftBarButtonItems" destination="erC-tS-oJ3" id="rDc-p9-ZUK"/>
+                        <outlet property="rightBarButtonItem" destination="be3-rv-Uhk" id="09e-ic-ryl"/>
                         <outlet property="tableView" destination="F7y-Mp-50r" id="ODc-7T-Uty"/>
                     </connections>
                 </viewController>

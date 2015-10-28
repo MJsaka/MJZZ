@@ -43,36 +43,17 @@ class MJZZTime : NSObject , NSCoding{
     }
 }
 
-class MJZZDateIndex {
-    var yearIndex : Int
-    var monthIndex : Int
-    var dayIndex : Int
-    private static let singleton : MJZZDateIndex = MJZZDateIndex()
-    
-    init(){
-            yearIndex = 0
-            monthIndex = 0
-            dayIndex = 0
-    }
-    class func currentIndex() -> MJZZDateIndex{
-        return singleton
-    }
-}
-
 @objc protocol MJZZDataProtocol{
     var data : [MJZZDataProtocol] {get set}
     var duration : Int {get set}
     var time : MJZZTime {get set}
-    func appendOnceData (aData : MJZZData)
+    func deleteDataAtIndexes(indexes : [Int], withSelectedDataIndex dataIndex: MJZZDataIndex , withSelectedDataScope dataScope : MJZZDataScope)
 }
 
 class MJZZData : NSObject , MJZZDataProtocol , NSCoding {
     var data : [MJZZDataProtocol]
     var duration : Int = 0
     var time : MJZZTime
-    func appendOnceData(aData: MJZZData) {
-        return
-    }
     override convenience init() {
         self.init(withTime : MJZZTime())
     }
@@ -85,25 +66,42 @@ class MJZZData : NSObject , MJZZDataProtocol , NSCoding {
         aCoder.encodeObject(time, forKey: "time")
         aCoder.encodeObject(data, forKey: "data")
     }
-    required init?(coder aDecoder: NSCoder) {
+    required init(coder aDecoder: NSCoder) {
         duration = aDecoder.decodeIntegerForKey("duration")
         time = aDecoder.decodeObjectForKey("time") as! MJZZTime
         data = aDecoder.decodeObjectForKey("data") as! [MJZZDataProtocol]
     }
+    func deleteDataAtIndexes(indexes : [Int], withSelectedDataIndex dataIndex: MJZZDataIndex , withSelectedDataScope dataScope : MJZZDataScope){
+        return
+    }
 }
 
 class MJZZDayData : MJZZData {
-    override func appendOnceData(aData : MJZZData){
+    func appendOnceData(aData : MJZZData){
         data.insert(aData, atIndex: 0)
         duration += aData.duration
+    }
+    override func deleteDataAtIndexes(indexes : [Int], withSelectedDataIndex dataIndex: MJZZDataIndex , withSelectedDataScope dataScope : MJZZDataScope){
+        if dataScope == MJZZDataScope.day {
+            for index in indexes {
+                duration -= data[index].duration
+            }
+            if duration == 0 {
+                return
+            }
+            for (var i = indexes.count - 1; i >= 0; --i) {
+                let index = indexes[i]
+                data.removeAtIndex(index)
+            }
+        }
     }
 }
 
 class MJZZMonthData : MJZZData {
-    override func appendOnceData (aData : MJZZData){
+    func appendOnceData (aData : MJZZData){
         var aDayData : MJZZDayData
-        if data.count != 0 && data[0].time.day == aData.time.day{
-            aDayData = data[0] as! MJZZDayData
+        if !data.isEmpty && data.first!.time.day == aData.time.day{
+            aDayData = data.first as! MJZZDayData
         }else{
             aDayData = MJZZDayData(withTime: aData.time)
             data.insert(aDayData, atIndex: 0)
@@ -111,13 +109,35 @@ class MJZZMonthData : MJZZData {
         aDayData.appendOnceData(aData)
         duration += aData.duration
     }
+    override func deleteDataAtIndexes(indexes : [Int], withSelectedDataIndex dataIndex: MJZZDataIndex , withSelectedDataScope dataScope : MJZZDataScope){
+        if dataScope == MJZZDataScope.month {
+            for index in indexes {
+                duration -= data[index].duration
+            }
+            if duration == 0 {
+                return
+            }
+            for (var i = indexes.count - 1; i >= 0; --i) {
+                let index = indexes[i]
+                data.removeAtIndex(index)
+            }
+        } else {
+            duration -= data[dataIndex.dayIndex].duration
+            data[dataIndex.dayIndex].deleteDataAtIndexes(indexes, withSelectedDataIndex: dataIndex, withSelectedDataScope: dataScope)
+            if data[dataIndex.dayIndex].duration == 0 {
+                data.removeAtIndex(dataIndex.dayIndex)
+            } else {
+                duration += data[dataIndex.dayIndex].duration
+            }
+        }
+    }
 }
 
 class MJZZYearData : MJZZData {
-    override func appendOnceData (aData : MJZZData){
+    func appendOnceData (aData : MJZZData){
         var aMonthData : MJZZMonthData
-        if data.count != 0 && data[0].time.month == aData.time.month {
-            aMonthData = data[0] as! MJZZMonthData
+        if !data.isEmpty && data.first!.time.month == aData.time.month {
+            aMonthData = data.first as! MJZZMonthData
         }else{
             aMonthData = MJZZMonthData(withTime: aData.time)
             data.insert(aMonthData, atIndex: 0)
@@ -125,17 +145,38 @@ class MJZZYearData : MJZZData {
         aMonthData.appendOnceData(aData)
         duration += aData.duration
     }
+    override func deleteDataAtIndexes(indexes : [Int], withSelectedDataIndex dataIndex: MJZZDataIndex , withSelectedDataScope dataScope : MJZZDataScope){
+        if dataScope == MJZZDataScope.year {
+            for index in indexes {
+                duration -= data[index].duration
+            }
+            if duration == 0 {
+                return
+            }
+            for (var i = indexes.count - 1; i >= 0; --i) {
+                let index = indexes[i]
+                data.removeAtIndex(index)
+            }
+        } else {
+            duration -= data[dataIndex.monthIndex].duration
+            data[dataIndex.monthIndex].deleteDataAtIndexes(indexes, withSelectedDataIndex: dataIndex, withSelectedDataScope: dataScope)
+            if data[dataIndex.monthIndex].duration == 0 {
+                data.removeAtIndex(dataIndex.monthIndex)
+            } else {
+                duration += data[dataIndex.monthIndex].duration
+            }
+        }
+    }
 }
-var singletonStatisticData : MJZZStatisticData = MJZZStatisticData()
 
+var singletonStatisticData : MJZZStatisticData = MJZZStatisticData()
 class MJZZStatisticData : MJZZData{
     
     var bestOnceDuration : Int = 0
-    
     class func appendOnceData (aData : MJZZData){
         var aYearData : MJZZYearData
-        if singletonStatisticData.data.count != 0 && singletonStatisticData.data[0].time.year == aData.time.year {
-            aYearData = singletonStatisticData.data[0] as! MJZZYearData
+        if !singletonStatisticData.data.isEmpty && singletonStatisticData.data.first!.time.year == aData.time.year {
+            aYearData = singletonStatisticData.data.first as! MJZZYearData
         }else{
             aYearData = MJZZYearData(withTime: aData.time)
             singletonStatisticData.data.insert(aYearData, atIndex: 0)
@@ -146,7 +187,30 @@ class MJZZStatisticData : MJZZData{
             singletonStatisticData.bestOnceDuration = aData.duration
         }
     }
+    class func deleteDataAtIndexes(indexes : [Int], withSelectedDataIndex dataIndex: MJZZDataIndex , withSelectedDataScope dataScope : MJZZDataScope){
+        singletonStatisticData.duration -= singletonStatisticData.data[dataIndex.yearIndex].duration
+        singletonStatisticData.data[dataIndex.yearIndex].deleteDataAtIndexes(indexes, withSelectedDataIndex: dataIndex, withSelectedDataScope: dataScope)
+        if singletonStatisticData.data[dataIndex.yearIndex].duration == 0 {
+            singletonStatisticData.data.removeAtIndex(dataIndex.yearIndex)
+        } else {
+            singletonStatisticData.duration += singletonStatisticData.data[dataIndex.yearIndex].duration
+        }
+    }
     class func sharedData() -> MJZZStatisticData {
         return singletonStatisticData
+    }
+    convenience init(){
+        self.init(withTime : MJZZTime())
+    }
+    override init(withTime aTime: MJZZTime) {
+        super.init(withTime: aTime)
+    }
+    override func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        aCoder.encodeInteger(bestOnceDuration, forKey: "bestOnceDuration")
+    }
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        bestOnceDuration = aDecoder.decodeIntegerForKey("bestOnceDuration")
     }
 }

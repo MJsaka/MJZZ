@@ -15,6 +15,9 @@ class StatisticAxisYView: UIView {
     // An empty implementation adversely affects performance during animation.
     override func drawRect(rect: CGRect) {
         // Drawing code
+        if MJZZStatisticData.sharedData().data.count == 0 {
+            return
+        }
         let context : CGContextRef = UIGraphicsGetCurrentContext()!
         CGContextSetRGBFillColor(context, 0.6, 0.6, 0.6, 1)
         
