@@ -9,8 +9,8 @@
 import UIKit
 
 class StatisticAxisYView: UIView {
-    var axisYMinDuration : Int = 0
-    var axisYMaxDuration : Int = 0
+    var minDuration : Int = 0
+    var maxDuration : Int = 0
     // Only override drawRect: if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
     override func drawRect(rect: CGRect) {
@@ -26,9 +26,9 @@ class StatisticAxisYView: UIView {
         CGContextFillRect(context, CGRect(x: 90, y: 0, width: 1, height: rect.size.height))
         for i in 0 ... 5 {
             //绘制Y轴文本
-            let maxDetaDuration : Int = axisYMaxDuration - axisYMinDuration
+            let maxDetaDuration : Int = maxDuration - minDuration
             
-            let axisYSectionTitle = compactStringFromTime(axisYMinDuration + i * maxDetaDuration / 5)
+            let sectionTitle = compactStringFromTime(minDuration + i * maxDetaDuration / 5)
             let rightAlignmentStyle : NSMutableParagraphStyle = NSMutableParagraphStyle()
             rightAlignmentStyle.alignment = NSTextAlignment.Right
             let attr : [ String : AnyObject] = [
@@ -36,8 +36,8 @@ class StatisticAxisYView: UIView {
                 NSForegroundColorAttributeName : UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0) ,
                 NSParagraphStyleAttributeName : rightAlignmentStyle
             ]
-            let axisYSectionRect : CGRect = CGRect(x: 0, y: maxHeight - CGFloat(i) / 5 * maxHeight - 20 , width: 85, height: 20)
-            NSString(string: axisYSectionTitle).drawInRect(axisYSectionRect, withAttributes: attr)
+            let sectionRect : CGRect = CGRect(x: 0, y: maxHeight - CGFloat(i) / 5 * maxHeight - 20 , width: 85, height: 20)
+            NSString(string: sectionTitle).drawInRect(sectionRect, withAttributes: attr)
             
             //绘制大刻度线
             CGContextFillRect(context, CGRect(x: 80, y: maxHeight - CGFloat(i) / 5 * maxHeight, width: 10, height: 1))

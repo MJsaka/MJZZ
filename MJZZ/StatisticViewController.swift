@@ -39,8 +39,8 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
     let selectedDataIndex : MJZZDataIndex = MJZZDataIndex()
     var selectedDataScope : MJZZDataScope = MJZZDataScope.year
     var currentDataArray : [MJZZDataProtocol] = MJZZStatisticData.sharedData().data
-    var axisYMinDuration : Int = 0
-    var axisYMaxDuration : Int = 0
+    var minDuration : Int = 0
+    var maxDuration : Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,7 +100,7 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         let index : Int = Int(sender.locationInView(graphView).x) / 40
         if index < currentDataArray.count {
             let aDuration : Int = currentDataArray[index].duration
-            let aY : CGFloat = (1.0 - CGFloat( aDuration - axisYMinDuration ) / CGFloat( axisYMaxDuration - axisYMinDuration )) * graphView.frame.height * 0.85
+            let aY : CGFloat = (1.0 - CGFloat( aDuration - minDuration ) / CGFloat( maxDuration - minDuration )) * graphView.frame.height * 0.85
             if abs(aY - sender.locationInView(graphView).y) < 20 || sender.locationInView(graphView).y > graphView.frame.height * 0.85 {
                 switch selectedDataScope {
                 case .year :
@@ -170,8 +170,8 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
                 shortestGraphDataDuration = aData.duration
             }
         }
-        axisYMinDuration = Int(Double(shortestGraphDataDuration) * 0.9)
-        axisYMaxDuration = Int(Double(longestGraphDataDuration) * 1.1)
+        minDuration = Int(Double(shortestGraphDataDuration) * 0.9)
+        maxDuration = Int(Double(longestGraphDataDuration) * 1.1)
         self.refreshGraphView()
         self.refreshGraphAxisYView()
         tableView.reloadData()
@@ -179,8 +179,8 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
     
     func refreshGraphView() {
         graphView.currentDataArray = currentDataArray
-        graphView.axisYMinDuration = axisYMinDuration
-        graphView.axisYMaxDuration = axisYMaxDuration
+        graphView.minDuration = minDuration
+        graphView.maxDuration = maxDuration
         graphView.selectedDataScope = selectedDataScope
         graphView.selectedDataIndex = selectedDataIndex
         graphView.frame.size.height = axisYView.frame.height
@@ -213,8 +213,8 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
 
     }
     func refreshGraphAxisYView() {
-        axisYView.axisYMinDuration = axisYMinDuration
-        axisYView.axisYMaxDuration = axisYMaxDuration
+        axisYView.minDuration = minDuration
+        axisYView.maxDuration = maxDuration
         axisYView.setNeedsDisplay()
     }
     
