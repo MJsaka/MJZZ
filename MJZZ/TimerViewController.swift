@@ -19,7 +19,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     var currentOnceData : MJZZData?
     var increaseTime : Int = 0
     var decreaseTime : Int = 0
-    var decreaseTimeDefault : Int = 0
+    var decreaseTimeDefault : Int = 5 * 60 * 100
     var increaseTimer : NSTimer!
     var decreaseTimer : NSTimer!
     

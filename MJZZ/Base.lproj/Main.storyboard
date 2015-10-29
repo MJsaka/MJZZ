@@ -332,19 +332,20 @@
                                         </connections>
                                     </segmentedControl>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceHorizontal="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spn-Zp-QSV">
-                                        <rect key="frame" x="0.0" y="30" width="600" height="292"/>
+                                        <rect key="frame" x="0.0" y="30" width="600" height="250"/>
                                         <animations/>
                                     </scrollView>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z6q-wu-xvu" customClass="StatisticAxisYView" customModule="MJZZ" customModuleProvider="target">
-                                        <rect key="frame" x="500" y="30" width="100" height="292"/>
+                                        <rect key="frame" x="500" y="30" width="100" height="250"/>
                                         <animations/>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstAttribute="height" constant="250" id="Wgd-9h-M66"/>
                                             <constraint firstAttribute="width" constant="100" id="z59-44-qTF"/>
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="F7y-Mp-50r">
-                                        <rect key="frame" x="0.0" y="322" width="600" height="165"/>
+                                        <rect key="frame" x="0.0" y="280" width="600" height="207"/>
                                         <animations/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
@@ -405,19 +406,18 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="F7y-Mp-50r" secondAttribute="bottom" id="BAk-I6-5Vn"/>
-                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="height" secondItem="spn-Zp-QSV" secondAttribute="height" id="Hqt-RU-Zmy"/>
+                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="top" secondItem="spn-Zp-QSV" secondAttribute="top" id="JIo-6G-D5E"/>
                                     <constraint firstAttribute="trailing" secondItem="F7y-Mp-50r" secondAttribute="trailing" id="Mja-fj-ngQ"/>
                                     <constraint firstAttribute="trailing" secondItem="spn-Zp-QSV" secondAttribute="trailing" id="Uq2-Sz-wC2"/>
                                     <constraint firstItem="z6q-wu-xvu" firstAttribute="top" secondItem="Ev3-aI-COF" secondAttribute="bottom" id="cAV-fC-zrK"/>
                                     <constraint firstItem="Ev3-aI-COF" firstAttribute="leading" secondItem="cmb-0I-e8K" secondAttribute="leading" id="h6t-cW-3aE"/>
                                     <constraint firstItem="F7y-Mp-50r" firstAttribute="leading" secondItem="cmb-0I-e8K" secondAttribute="leading" id="idy-Rz-WT6"/>
                                     <constraint firstItem="spn-Zp-QSV" firstAttribute="leading" secondItem="cmb-0I-e8K" secondAttribute="leading" id="ifq-fY-ZGG"/>
+                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="height" secondItem="spn-Zp-QSV" secondAttribute="height" id="j6a-XK-Mgk"/>
                                     <constraint firstItem="F7y-Mp-50r" firstAttribute="top" secondItem="z6q-wu-xvu" secondAttribute="bottom" id="nU6-Ux-WEC"/>
-                                    <constraint firstItem="spn-Zp-QSV" firstAttribute="height" secondItem="cmb-0I-e8K" secondAttribute="height" multiplier="3:5" id="pew-OB-dFC"/>
                                     <constraint firstItem="z6q-wu-xvu" firstAttribute="trailing" secondItem="cmb-0I-e8K" secondAttribute="trailing" id="q7q-kj-G2e"/>
                                     <constraint firstAttribute="trailing" secondItem="Ev3-aI-COF" secondAttribute="trailing" id="qiE-oy-D7i"/>
-                                    <constraint firstItem="spn-Zp-QSV" firstAttribute="top" secondItem="Ev3-aI-COF" secondAttribute="bottom" id="swp-y3-b4Z"/>
-                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="centerY" secondItem="spn-Zp-QSV" secondAttribute="centerY" id="v3e-wl-tNw"/>
+                                    <constraint firstItem="z6q-wu-xvu" firstAttribute="trailing" secondItem="spn-Zp-QSV" secondAttribute="trailing" id="tY5-xv-Rqs"/>
                                     <constraint firstItem="Ev3-aI-COF" firstAttribute="top" secondItem="cmb-0I-e8K" secondAttribute="top" id="vHV-pG-HFJ"/>
                                 </constraints>
                             </view>

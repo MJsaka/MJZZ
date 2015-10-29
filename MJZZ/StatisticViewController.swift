@@ -51,7 +51,6 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         
         graphView.backgroundColor = UIColor.whiteColor()
         graphScrollView.addSubview(graphView)
-        graphScrollView.contentOffset = CGPoint(x: 0, y: 0)
         let graphViewTapGesture = UITapGestureRecognizer(target: self, action: "graphViewTaped:")
         graphView.addGestureRecognizer(graphViewTapGesture)
         graphView.setNeedsDisplay()
@@ -92,7 +91,6 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
         default :
             break
         }
-        graphScrollView.contentOffset = CGPoint(x: 0, y: 0)
         refreshAll()
     }
     
