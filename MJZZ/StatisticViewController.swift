@@ -238,16 +238,23 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
                 indexes.append(indexPath.row)
             }
             indexes = indexes.sort()
-            MJZZStatisticData.deleteDataAtIndexes(indexes, withSelectedDataIndex: selectedDataIndex, withSelectedDataScope: selectedDataScope)
-            leftBarButtonItems.title = ""
-            self.updataSelectedDataIndexAndScope()
-            self.refreshAll()
+            let alertController : UIAlertController = UIAlertController(title: "", message: "确定删除？", preferredStyle: UIAlertControllerStyle.Alert)
+            let cancelAction : UIAlertAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil)
+            let confirmAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+                MJZZStatisticData.deleteDataAtIndexes(indexes, withSelectedDataIndex: self.selectedDataIndex, withSelectedDataScope: self.selectedDataScope)
+                self.leftBarButtonItems.title = ""
+                self.updataSelectedDataIndexAndScope()
+                self.refreshAll()
+            })
+            alertController.addAction(cancelAction)
+            alertController.addAction(confirmAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         var aNum : Int = 0
-        if currentDataArray.count != 0 {
+        if !currentDataArray.isEmpty {
             var selectedDataIndexOfCurrentScope : Int = 0
 
             switch selectedDataScope {
@@ -265,18 +272,21 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         var aString : String
-        if currentDataArray.count != 0 {
-            var aTime : MJZZTime
+        if !currentDataArray.isEmpty {
+            var aData : MJZZDataProtocol
             switch selectedDataScope{
             case .year :
-                aTime = currentDataArray[selectedDataIndex.yearIndex].time
-                aString = String(format:"%d年每月累计时长",aTime.year)
+                aData = currentDataArray[selectedDataIndex.yearIndex]
+                aString = String(format:"%d年累计:",aData.time.year)
+                aString += compactStringFromTime(aData.duration)
             case .month :
-                aTime = currentDataArray[selectedDataIndex.monthIndex].time
-                aString = String(format:"%d年%d月每天累计时长",aTime.year,aTime.month)
+                aData = currentDataArray[selectedDataIndex.monthIndex]
+                aString = String(format:"%d年%d月累计:",aData.time.year,aData.time.month)
+                aString += compactStringFromTime(aData.duration)
             case .day :
-                aTime = currentDataArray[selectedDataIndex.dayIndex].time
-                aString = String(format:"%d年%d月%d天每次时长",aTime.year,aTime.month,aTime.day)
+                aData = currentDataArray[selectedDataIndex.dayIndex]
+                aString = String(format:"%d年%d月%d日累计:",aData.time.year,aData.time.month,aData.time.day)
+                aString += compactStringFromTime(aData.duration)
             }
         } else {
             aString = "您还没有任何锻炼数据"
@@ -308,9 +318,16 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
     }
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == UITableViewCellEditingStyle.Delete {
-            MJZZStatisticData.deleteDataAtIndexes([indexPath.row], withSelectedDataIndex: selectedDataIndex, withSelectedDataScope: selectedDataScope)
-            self.updataSelectedDataIndexAndScope()
-            self.refreshAll()
+            let alertController : UIAlertController = UIAlertController(title: "", message: "确定删除？", preferredStyle: UIAlertControllerStyle.Alert)
+            let cancelAction : UIAlertAction = UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil)
+            let confirmAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) -> Void in
+                MJZZStatisticData.deleteDataAtIndexes([indexPath.row], withSelectedDataIndex: self.selectedDataIndex, withSelectedDataScope: self.selectedDataScope)
+                self.updataSelectedDataIndexAndScope()
+                self.refreshAll()
+            })
+            alertController.addAction(cancelAction)
+            alertController.addAction(confirmAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle{

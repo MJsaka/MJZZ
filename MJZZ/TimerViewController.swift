@@ -19,7 +19,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     var currentOnceData : MJZZData?
     var increaseTime : Int = 0
     var decreaseTime : Int = 0
-    var decreaseTimeDefault : Int = MJZZStatisticData.sharedData().bestOnceDuration
+    var decreaseTimeDefault : Int = 0
     var increaseTimer : NSTimer!
     var decreaseTimer : NSTimer!
     
@@ -43,6 +43,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         // Do any additional setup after loading the view, typically from a nib.
         
         setSegmentedControlStyle(segment ,fontSize : 20)
+        decreaseTimeDefault = MJZZStatisticData.sharedData().bestOnceDuration
         decreaseTime = decreaseTimeDefault
         increaseTimeLabel.text = stringFromTime(increaseTime)
         decreaseTimeLabel.text = stringFromTime(decreaseTimeDefault)
@@ -107,7 +108,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     }
     
     func buttonAnimation(button : UIButton , status : buttonAnimationType){
-        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
+        UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
             button.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI_2), 0, 1, 0)
             }) { (finished) -> Void in
                 switch status {
@@ -116,7 +117,7 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
                 case buttonAnimationType.stop :
                     button.setImage(UIImage(named: "Icon_Button_Normal"), forState: UIControlState.Normal)
                 }
-                UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+                UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
                     button.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI), 0, 1, 0)
                     }) {  (finished) -> Void in
                         
@@ -136,6 +137,11 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
                     topTimeLabel.hidden = false
                 }
                 self.buttonAnimation(self.increaseButton, status: buttonAnimationType.start)
+            }else{
+                let alertController : UIAlertController = UIAlertController(title: "", message: "挑战模式已经开启，请先结束再来", preferredStyle: UIAlertControllerStyle.Alert)
+                let defaultAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Cancel, handler: nil)
+                alertController.addAction(defaultAction)
+                self.presentViewController(alertController, animated: true, completion: nil)
             }
         }else{
             topTimeLabel.hidden = true
@@ -163,6 +169,11 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
                 currentOnceData = MJZZData()
                 decreaseTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "decreaseTimerTrigger", userInfo: nil, repeats: true)
                 self.buttonAnimation(self.decreaseButton, status: buttonAnimationType.start)
+            }else{
+                let alertController : UIAlertController = UIAlertController(title: "", message: "计时模式已经开启，请先结束再来", preferredStyle: UIAlertControllerStyle.Alert)
+                let defaultAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Cancel, handler: nil)
+                alertController.addAction(defaultAction)
+                self.presentViewController(alertController, animated: true, completion: nil)
             }
         }else{
             decreaseTimer.invalidate()

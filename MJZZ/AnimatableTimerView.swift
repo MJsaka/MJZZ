@@ -41,6 +41,8 @@ class AnimatableTimerView: UIView {
         case TimeAnimateType.DecreaseType :
             endAngle  = CGFloat(-1/2 * M_PI)
             animateEndAngle = CGFloat((3-4*animateProgress)/2 * M_PI)
+            animatedLineColor = UIColor.redColor()
+            animatingLineColor = UIColor.lightGrayColor()
         }
         
         var cRed : CGFloat = CGFloat()
