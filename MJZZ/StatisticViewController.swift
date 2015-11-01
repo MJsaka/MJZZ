@@ -62,15 +62,18 @@ class StatisticViewController: UIViewController , UITableViewDataSource ,UITable
                     for k in 1 ... MJZZTime().day {
                         let aDay : Int = k
                         let aData : MJZZData = MJZZData(withTime: MJZZTime(year: aYear, month: aMonth, day: aDay, hour: 0, minute: 0))
-                        aData.duration = random() % 360000
+                        aData.duration = random() % 1000
                         MJZZStatisticData.appendOnceData(aData)
                     }
                 }
             }
         }
+        self.refreshAll()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "statisticDataChanged", name: "MJZZNotificationStatisticDataChanged", object: nil)
+
     }
     
-    override func viewWillAppear(animated: Bool) {
+    func statisticDataChanged() {
         refreshAll()
     }
     

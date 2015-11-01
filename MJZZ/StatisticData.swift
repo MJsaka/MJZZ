@@ -168,7 +168,6 @@ class MJZZYearData : MJZZData {
         }
     }
 }
-
 var singletonStatisticData : MJZZStatisticData = MJZZStatisticData()
 class MJZZStatisticData : MJZZData{
     
@@ -185,7 +184,9 @@ class MJZZStatisticData : MJZZData{
         singletonStatisticData.duration += aData.duration
         if aData.duration > singletonStatisticData.bestOnceDuration {
             singletonStatisticData.bestOnceDuration = aData.duration
+            NSNotificationCenter.defaultCenter().postNotificationName("MJZZNotificationBestDurationChanged", object: singletonStatisticData)
         }
+        NSNotificationCenter.defaultCenter().postNotificationName("MJZZNotificationStatisticDataChanged", object: singletonStatisticData)
     }
     class func deleteDataAtIndexes(indexes : [Int], withSelectedDataIndex dataIndex: MJZZDataIndex , withSelectedDataScope dataScope : MJZZDataScope){
         singletonStatisticData.duration -= singletonStatisticData.data[dataIndex.yearIndex].duration

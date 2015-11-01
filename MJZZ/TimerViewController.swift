@@ -8,20 +8,23 @@
 
 import UIKit
 
-enum buttonAnimationType : Int {
+enum MJZZButtonAnimationType : Int {
     case start
     case stop
+}
+enum MJZZTimerType : Int {
+    case increase
+    case decrease
 }
 
 
 class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDataSource,UIPickerViewDelegate {
 
     var currentOnceData : MJZZData?
-    var increaseTime : Int = 0
-    var decreaseTime : Int = 0
-    var decreaseTimeDefault : Int = 5 * 60 * 100
-    var increaseTimer : NSTimer!
-    var decreaseTimer : NSTimer!
+    var currentTimerType : MJZZTimerType = MJZZTimerType.increase
+    var time : Int = 0
+    var topTime : Int = 5 * 60 * 100
+    var timer : NSTimer!
     
     @IBOutlet weak var increaseView: AnimatableTimerView!
     @IBOutlet weak var decreaseView: AnimatableTimerView!
@@ -41,12 +44,11 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "bestDurationChanged", name: "MJZZNotificationBestDurationChanged", object: nil)
         setSegmentedControlStyle(segment ,fontSize : 20)
-        decreaseTimeDefault = MJZZStatisticData.sharedData().bestOnceDuration
-        decreaseTime = decreaseTimeDefault
-        increaseTimeLabel.text = stringFromTime(increaseTime)
-        decreaseTimeLabel.text = stringFromTime(decreaseTimeDefault)
+        topTime = MJZZStatisticData.sharedData().bestOnceDuration
+        increaseTimeLabel.text = stringFromTime(0)
+        decreaseTimeLabel.text = stringFromTime(topTime)
         containerScrollView.delegate = self
         decreaseTimePicker.hidden = true
         increaseView.animateType = TimeAnimateType.IncreaseType
@@ -63,6 +65,10 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         
         self.view.bringSubviewToFront(segment)
         
+    }
+    func bestDurationChanged() {
+        topTime = MJZZStatisticData.sharedData().bestOnceDuration
+        decreaseTimeLabel.text = stringFromTime(topTime)
     }
     
     @IBAction func segmentChanged(sender: UISegmentedControl) {
@@ -84,37 +90,38 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     }
 
    
-    func increaseTimerTrigger() {
-        increaseTime += 10
-        increaseTimeLabel.text = stringFromTime(increaseTime)
-        increaseView.animateProgress += 1/600
-        increaseView.setNeedsDisplay()
-    }
-    func decreaseTimerTrigger() {
-        decreaseTime -= 10
-        if decreaseTime < 0 {
-            decreaseTimer.invalidate()
-            decreaseTimer = nil
-            currentOnceData?.duration = decreaseTimeDefault - decreaseTime
-            MJZZStatisticData.appendOnceData(currentOnceData!)
-            decreaseTime = decreaseTimeDefault
-            decreaseTimeLabel.text = stringFromTime(decreaseTime)
-            self.buttonAnimation(self.decreaseButton, status: buttonAnimationType.stop)
-        }else{
-            decreaseTimeLabel.text = stringFromTime(decreaseTime)
-            decreaseView.animateProgress += 10.0/Double(decreaseTimeDefault)
-            decreaseView.setNeedsDisplay()
+    func timerTrigger() {
+        time += 10
+        switch currentTimerType {
+        case MJZZTimerType.increase :
+            increaseTimeLabel.text = stringFromTime(time)
+            increaseView.animateProgress += 1/600
+            increaseView.setNeedsDisplay()
+        case MJZZTimerType.decrease :
+            let dTime = topTime - time
+            if dTime < 0 {
+                timer.invalidate()
+                timer = nil
+                currentOnceData?.duration = time
+                MJZZStatisticData.appendOnceData(currentOnceData!)
+                decreaseTimeLabel.text = stringFromTime(topTime)
+                self.buttonAnimation(self.decreaseButton, status: MJZZButtonAnimationType.stop)
+            }else{
+                decreaseTimeLabel.text = stringFromTime(topTime - time)
+                decreaseView.animateProgress += 10.0/Double(topTime)
+                decreaseView.setNeedsDisplay()
+            }
         }
     }
     
-    func buttonAnimation(button : UIButton , status : buttonAnimationType){
+    func buttonAnimation(button : UIButton , status : MJZZButtonAnimationType){
         UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseIn, animations: { () -> Void in
             button.layer.transform = CATransform3DMakeRotation(CGFloat(M_PI_2), 0, 1, 0)
             }) { (finished) -> Void in
                 switch status {
-                case buttonAnimationType.start :
+                case MJZZButtonAnimationType.start :
                     button.setImage(UIImage(named: "Icon_Button_Clicked"), forState: UIControlState.Normal)
-                case buttonAnimationType.stop :
+                case MJZZButtonAnimationType.stop :
                     button.setImage(UIImage(named: "Icon_Button_Normal"), forState: UIControlState.Normal)
                 }
                 UIView.animateWithDuration(0.25, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
@@ -126,65 +133,59 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     }
     
     @IBAction func increaseTimerButtonClicked(sender: UIButton) {
-        if increaseTimer == nil {
-            if decreaseTimer == nil {
-                currentOnceData = MJZZData()
-                increaseTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "increaseTimerTrigger", userInfo: nil, repeats: true)
-                let topTime = MJZZStatisticData.sharedData().bestOnceDuration
-                if topTime > 0 {
-                    topTimeLabel.text = stringFromTime(topTime)
-                    topTimeTitle.hidden = false
-                    topTimeLabel.hidden = false
-                }
-                self.buttonAnimation(self.increaseButton, status: buttonAnimationType.start)
-            }else{
-                let alertController : UIAlertController = UIAlertController(title: "", message: "挑战模式已经开启，请先结束再来", preferredStyle: UIAlertControllerStyle.Alert)
-                let defaultAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Cancel, handler: nil)
-                alertController.addAction(defaultAction)
-                self.presentViewController(alertController, animated: true, completion: nil)
+        if timer == nil {
+            currentOnceData = MJZZData()
+            timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "timerTrigger", userInfo: nil, repeats: true)
+            NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
+            let bestOnceDuration = MJZZStatisticData.sharedData().bestOnceDuration
+            if bestOnceDuration > 0 {
+                topTimeLabel.text = stringFromTime(bestOnceDuration)
+                topTimeTitle.hidden = false
+                topTimeLabel.hidden = false
             }
-        }else{
+            self.buttonAnimation(self.increaseButton, status: MJZZButtonAnimationType.start)
+            currentTimerType = MJZZTimerType.increase
+        }else if currentTimerType == MJZZTimerType.increase {
+            timer.invalidate()
+            timer = nil
+            currentOnceData?.duration = time
+            MJZZStatisticData.appendOnceData(currentOnceData!)
+            increaseTimeLabel.text = stringFromTime(0)
             topTimeLabel.hidden = true
             topTimeTitle.hidden = true
-            increaseTimer.invalidate()
-            increaseTimer = nil
-            currentOnceData?.duration = increaseTime
-            MJZZStatisticData.appendOnceData(currentOnceData!)
-            let topTime = MJZZStatisticData.sharedData().bestOnceDuration
-            if topTime > decreaseTimeDefault {
-                decreaseTimeDefault = topTime
-                decreaseTime = decreaseTimeDefault
-                decreaseTimeLabel.text = stringFromTime(decreaseTimeDefault)
-            }
-            increaseTime = 0
-            increaseTimeLabel.text = stringFromTime(increaseTime)
+            time = 0
             increaseView.animateProgress = 0
             increaseView.setNeedsDisplay()
-            self.buttonAnimation(self.increaseButton, status: buttonAnimationType.stop)
+            self.buttonAnimation(self.increaseButton, status: MJZZButtonAnimationType.stop)
+        } else {
+            let alertController : UIAlertController = UIAlertController(title: "", message: "挑战模式已经开启，请先结束再来", preferredStyle: UIAlertControllerStyle.Alert)
+            let defaultAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     @IBAction func decreaseTimerButtonClicked(sender: UIButton) {
-        if decreaseTimer == nil {
-            if increaseTimer == nil {
-                currentOnceData = MJZZData()
-                decreaseTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "decreaseTimerTrigger", userInfo: nil, repeats: true)
-                self.buttonAnimation(self.decreaseButton, status: buttonAnimationType.start)
-            }else{
-                let alertController : UIAlertController = UIAlertController(title: "", message: "计时模式已经开启，请先结束再来", preferredStyle: UIAlertControllerStyle.Alert)
-                let defaultAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Cancel, handler: nil)
-                alertController.addAction(defaultAction)
-                self.presentViewController(alertController, animated: true, completion: nil)
-            }
-        }else{
-            decreaseTimer.invalidate()
-            decreaseTimer = nil
+        if timer == nil {
+            currentOnceData = MJZZData()
+            timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "timerTrigger", userInfo: nil, repeats: true)
+            NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSRunLoopCommonModes)
+            self.buttonAnimation(self.decreaseButton, status: MJZZButtonAnimationType.start)
+            currentTimerType = MJZZTimerType.decrease
+        }else if currentTimerType == MJZZTimerType.decrease{
+            timer.invalidate()
+            timer = nil
+            currentOnceData?.duration = time
+            MJZZStatisticData.appendOnceData(currentOnceData!)
+            time = 0
             decreaseView.animateProgress = 0
             decreaseView.setNeedsDisplay()
-            currentOnceData?.duration = decreaseTimeDefault - decreaseTime
-            MJZZStatisticData.appendOnceData(currentOnceData!)
-            decreaseTime = decreaseTimeDefault
-            decreaseTimeLabel.text = stringFromTime(decreaseTime)
-            self.buttonAnimation(self.decreaseButton, status: buttonAnimationType.stop)
+            decreaseTimeLabel.text = stringFromTime(topTime)
+            self.buttonAnimation(self.decreaseButton, status: MJZZButtonAnimationType.stop)
+        }else{
+            let alertController : UIAlertController = UIAlertController(title: "", message: "计时模式已经开启，请先结束再来", preferredStyle: UIAlertControllerStyle.Alert)
+            let defaultAction : UIAlertAction = UIAlertAction(title: "确定", style: UIAlertActionStyle.Cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     
@@ -216,19 +217,20 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     }
     
     func decreaseLabelTaped(){
-        if decreaseTimePicker.hidden == true && decreaseTimer == nil{
-            decreaseTimePicker.hidden = false
-            decreaseTimePicker.selectRow(decreaseTimeDefault/360000, inComponent: 0, animated: false)
-            decreaseTimePicker.selectRow((decreaseTimeDefault/6000)%60, inComponent: 1, animated: false)
-            decreaseTimePicker.selectRow((decreaseTimeDefault/100)%60, inComponent: 2, animated: false)
+        if decreaseTimePicker.hidden == true {
+            if timer == nil || currentTimerType != MJZZTimerType.decrease{
+                decreaseTimePicker.hidden = false
+                decreaseTimePicker.selectRow(topTime/360000, inComponent: 0, animated: false)
+                decreaseTimePicker.selectRow((topTime/6000)%60, inComponent: 1, animated: false)
+                decreaseTimePicker.selectRow((topTime/100)%60, inComponent: 2, animated: false)
+            }
         }
     }
     func decreaseViewTaped(){
         if decreaseTimePicker.hidden == false {
             decreaseTimePicker.hidden = true
-            decreaseTimeDefault = decreaseTimePicker.selectedRowInComponent(0) * 360000 + decreaseTimePicker.selectedRowInComponent(1) * 6000 + decreaseTimePicker.selectedRowInComponent(2) * 100
-            decreaseTime = decreaseTimeDefault
-            decreaseTimeLabel.text = stringFromTime(decreaseTime)
+            topTime = decreaseTimePicker.selectedRowInComponent(0) * 360000 + decreaseTimePicker.selectedRowInComponent(1) * 6000 + decreaseTimePicker.selectedRowInComponent(2) * 100
+            decreaseTimeLabel.text = stringFromTime(topTime)
             decreaseView.animateProgress = 0
             decreaseView.setNeedsDisplay()
         }
