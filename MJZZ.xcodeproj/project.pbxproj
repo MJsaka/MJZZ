@@ -13,15 +13,15 @@
 		C52336641BC76DF500CBBC4C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C52336621BC76DF500CBBC4C /* LaunchScreen.storyboard */; };
 		C523366F1BC76DF500CBBC4C /* MJZZTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523366E1BC76DF500CBBC4C /* MJZZTests.swift */; };
 		C523367A1BC76DF500CBBC4C /* MJZZUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52336791BC76DF500CBBC4C /* MJZZUITests.swift */; };
-		C52336881BC7702C00CBBC4C /* StatisticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52336871BC7702C00CBBC4C /* StatisticViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		C523368A1BC7706D00CBBC4C /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52336891BC7706D00CBBC4C /* CommunityViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		C523368C1BC7708A00CBBC4C /* SelfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523368B1BC7708A00CBBC4C /* SelfViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		C52336CA1BC7950800CBBC4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C52336C91BC7950800CBBC4C /* Assets.xcassets */; settings = {ASSET_TAGS = (); }; };
-		C58E541B1BD71D2A00095882 /* StatisticData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58E541A1BD71D2A00095882 /* StatisticData.swift */; settings = {ASSET_TAGS = (); }; };
-		C5989C1C1BCF80FE0036BEF0 /* AnimatableTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5989C1B1BCF80FE0036BEF0 /* AnimatableTimerView.swift */; settings = {ASSET_TAGS = (); }; };
-		C5989C1E1BCF84B70036BEF0 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5989C1D1BCF84B70036BEF0 /* ScheduleViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		C5E474641BD8753F0054FD6B /* StatisticGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E474631BD8753F0054FD6B /* StatisticGraphView.swift */; settings = {ASSET_TAGS = (); }; };
-		C5E474661BD886160054FD6B /* StatisticAxisYView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E474651BD886160054FD6B /* StatisticAxisYView.swift */; settings = {ASSET_TAGS = (); }; };
+		C52336881BC7702C00CBBC4C /* StatisticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52336871BC7702C00CBBC4C /* StatisticViewController.swift */; };
+		C523368A1BC7706D00CBBC4C /* CommunityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52336891BC7706D00CBBC4C /* CommunityViewController.swift */; };
+		C523368C1BC7708A00CBBC4C /* SelfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523368B1BC7708A00CBBC4C /* SelfViewController.swift */; };
+		C52336CA1BC7950800CBBC4C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C52336C91BC7950800CBBC4C /* Assets.xcassets */; };
+		C58E541B1BD71D2A00095882 /* StatisticData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58E541A1BD71D2A00095882 /* StatisticData.swift */; };
+		C5989C1C1BCF80FE0036BEF0 /* AnimatableTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5989C1B1BCF80FE0036BEF0 /* AnimatableTimerView.swift */; };
+		C5989C1E1BCF84B70036BEF0 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5989C1D1BCF84B70036BEF0 /* ScheduleViewController.swift */; };
+		C5E474641BD8753F0054FD6B /* StatisticGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E474631BD8753F0054FD6B /* StatisticGraphView.swift */; };
+		C5E474661BD886160054FD6B /* StatisticAxisYView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E474651BD886160054FD6B /* StatisticAxisYView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

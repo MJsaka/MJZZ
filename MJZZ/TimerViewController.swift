@@ -25,6 +25,8 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
     var time : Int = 0
     var topTime : Int = 5 * 60 * 100
     var timer : NSTimer!
+    var backgroundTimerTask : UIBackgroundTaskIdentifier!
+
     
     @IBOutlet weak var increaseView: AnimatableTimerView!
     @IBOutlet weak var decreaseView: AnimatableTimerView!
@@ -45,6 +47,9 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "bestDurationChanged", name: "MJZZNotificationBestDurationChanged", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appWillResignActiveHandler", name: UIApplicationWillResignActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appWillEnterForegroundHandler", name: UIApplicationWillEnterForegroundNotification, object: nil)
+
         setSegmentedControlStyle(segment ,fontSize : 20)
         topTime = MJZZStatisticData.sharedData().bestOnceDuration
         increaseTimeLabel.text = stringFromTime(0)
@@ -66,6 +71,18 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
         self.view.bringSubviewToFront(segment)
         
     }
+    
+    func appWillResignActiveHandler() {
+        if timer != nil {
+            self.backgroundTimerTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler(nil)
+        }
+    }
+    func appWillEnterForegroundHandler() {
+        if timer != nil {
+            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTimerTask)
+        }
+    }
+    
     func bestDurationChanged() {
         topTime = MJZZStatisticData.sharedData().bestOnceDuration
         decreaseTimeLabel.text = stringFromTime(topTime)
@@ -105,12 +122,17 @@ class TimerViewController: UIViewController,UIScrollViewDelegate ,UIPickerViewDa
                 currentOnceData?.duration = time
                 MJZZStatisticData.appendOnceData(currentOnceData!)
                 decreaseTimeLabel.text = stringFromTime(topTime)
+                time = 0
+                decreaseView.animateProgress = 0
+                if UIApplication.sharedApplication().applicationState == UIApplicationState.Background {
+                    UIApplication.sharedApplication().endBackgroundTask(self.backgroundTimerTask)
+                }
                 self.buttonAnimation(self.decreaseButton, status: MJZZButtonAnimationType.stop)
             }else{
                 decreaseTimeLabel.text = stringFromTime(topTime - time)
                 decreaseView.animateProgress += 10.0/Double(topTime)
-                decreaseView.setNeedsDisplay()
             }
+            decreaseView.setNeedsDisplay()
         }
     }
     

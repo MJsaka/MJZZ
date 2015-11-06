@@ -5,14 +5,13 @@
 //  Created by MJsaka on 15/10/9.
 //  Copyright © 2015年 MJsaka. All rights reserved.
 //
-
+import AVFoundation
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -47,7 +46,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NSUserDefaults.standardUserDefaults().setObject(sharedStatisticData, forKey: "SharedStatisticData")
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasStatisticData")
     }
-
-
 }
 
